@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+    
+    <entry>
+      <title>Javascript Promise에 관하여</title>
+      <link href="/2018/11/18/Javascript/"/>
+      <url>/2018/11/18/Javascript/</url>
+      
+        <content type="html"><![CDATA[<h2 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h2><p>Javascript는 널리 알려진 것 처럼 비동기 함수 위주의 동작을 잘 구현한 언어이다.</p><p>특히 NodeJS에 와서는 그 비동기 함수로 인한 장점을 많이 누릴 수 있게 된 것 같은데 아무래도 평소에 개발하는건 대부분 Java로 하기 때문에 Javascript를 개인적으로 공부해보고 무슨 장점이 있는지에 대해 알아보려고 한다.</p><p>일단 Promise가 무엇인지부터 살펴보도록 하자</p><blockquote><p>The <strong>Promise</strong> object represents the eventual completion (or failure) of an asynchronous operation, and its resulting value.</p><p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank" rel="noopener">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise</a></p></blockquote><p>설명에 따르면 Promise는 비동기 함수의 동작이나 return value의 실패/성공을 받아서 궁극적인 완성을 시키기 위함 이라고 한다.</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>( <span class="comment">/* executor */</span> <span class="function"><span class="keyword">function</span>(<span class="params">resolve, reject</span>) </span>&#123; ... &#125; );</span><br></pre></td></tr></table></figure><p>Promise는 위와 같이 resolve와 reject라는 parameter를 가지고 있다.</p><p><img src="https://gompangs.github.io/images/promise-resolve-reject.png" alt=""></p><h2 id="Promise를-사용-안할-때"><a href="#Promise를-사용-안할-때" class="headerlink" title="Promise를 사용 안할 때"></a>Promise를 사용 안할 때</h2><h2 id="Promise를-사용할-때"><a href="#Promise를-사용할-때" class="headerlink" title="Promise를 사용할 때"></a>Promise를 사용할 때</h2>]]></content>
+      
+      
+      <categories>
+          
+          <category> Javascript </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Promise </tag>
+            
+            <tag> Javascript </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>markdown</title>
+      <link href="/2018/11/18/markdown/"/>
+      <url>/2018/11/18/markdown/</url>
+      
+        <content type="html"><![CDATA[<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">    System.out.println(<span class="string">"Hello world"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>안녕하세요, 이게 Typora로 작성하는 중인데요</p><ul><li>첫번째<ul><li>두번째</li></ul></li></ul><ol><li>이것도<ol><li>저것도<ol><li>이것도</li></ol></li></ol></li></ol><h1 id="h1"><a href="#h1" class="headerlink" title="h1"></a>h1</h1><h2 id="안녕하세요"><a href="#안녕하세요" class="headerlink" title="안녕하세요"></a>안녕하세요</h2><blockquote><p>무언가를 말하고싶을땐 이렇게 말한다</p><p>Blockquote 구문</p></blockquote><p><em>이렇게 하면 강조</em></p><p><strong>이렇게하면 강조2</strong></p><p><em>이렇게하면 강조</em></p><h3 id="h3"><a href="#h3" class="headerlink" title="h3"></a>h3</h3><p><img src="https://taazaa.com/wp-content/uploads/2017/12/microservice.png" alt="img"></p><p><img src="https://google.com/favicon.ico" alt=""></p><h2 id="두번째-단락"><a href="#두번째-단락" class="headerlink" title="두번째 단락"></a>두번째 단락</h2><p>여기가 두번째 단락</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">some_function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(data);</span><br><span class="line">    data.stream(<span class="function">(<span class="params">stream</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(stream);</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="세번째-단락"><a href="#세번째-단락" class="headerlink" title="세번째 단락"></a>세번째 단락</h2><p>여기가 세번째 단락입니다</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">static void SomeMethod(Point some, int some2)&#123;</span><br><span class="line">    some.GetX();</span><br><span class="line">    some.GetY();</span><br><span class="line">    int _some = some2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">​<span class="code">```java</span></span><br><span class="line"><span class="code">public static void main()&#123;</span></span><br><span class="line"><span class="code">    </span></span><br><span class="line"><span class="code">&#125;</span></span><br><span class="line"><span class="code">​</span></span><br></pre></td></tr></table></figure><p><code>`</code></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    <entry>
+      <title>disqus</title>
+      <link href="/2018/11/02/disqus/"/>
+      <url>/2018/11/02/disqus/</url>
+      
+        <content type="html"><![CDATA[<p>아 제발 disqus좀 되게 해주세요</p><p>아래에 있는 disqus 나오게 해주세요</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#editor'</span>,</span><br><span class="line">  data: &#123;</span><br><span class="line">    input: <span class="string">'# hello'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  computed: &#123;</span><br><span class="line">    compiledMarkdown: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> marked(<span class="keyword">this</span>.input, &#123; <span class="attr">sanitize</span>: <span class="literal">true</span> &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    update: _.debounce(<span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.input = e.target.value</span><br><span class="line">    &#125;, <span class="number">300</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> disqus </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>java test</title>
+      <link href="/2018/11/02/java-test/"/>
+      <url>/2018/11/02/java-test/</url>
+      
+        <content type="html"><![CDATA[<p>JAVA TEST</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">System.out.println(<span class="string">"Hello world"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> JAVA </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> java </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title></title>
+      <link href="/2018/11/02/Untitled/"/>
+      <url>/2018/11/02/Untitled/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      <categories>
+          
+          <category> Javascript </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Promise </tag>
+            
+            <tag> Javascript </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>first-post</title>
+      <link href="/2018/11/02/first-post/"/>
+      <url>/2018/11/02/first-post/</url>
+      
+        <content type="html"><![CDATA[<p>첫번째 블로그 포스팅 테스트입니다.<br>Hello world, this is test post for Hexo blog.</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> </span>&#123;</span><br><span class="line">System.out.println(<span class="string">"Hello world"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>이렇게하면 어떻게보일지 잘 모르겠네요</p><p>I don’t know what you see whatever I did anything.</p><p>수정중이면 바로 반영이 되나?</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> test </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> test </tag>
+            
+            <tag> post </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>Hello World</title>
+      <link href="/2018/11/02/hello-world/"/>
+      <url>/2018/11/02/hello-world/</url>
+      
+        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>]]></content>
+      
+      
+      
+    </entry>
+    
+  
+  
+</search>
