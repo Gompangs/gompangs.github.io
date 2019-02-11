@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang=KR>
+<html lang="KR">
 <head><meta name="generator" content="Hexo 3.8.0">
     <!-- so meta -->
     <meta charset="utf-8">
@@ -10,7 +10,7 @@
 <meta name="keywords" content="Javascript,Promise">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Javascript Promise에 관하여">
-<meta property="og:url" content="http://yoursite.com/2018/11/18/Javascript/index.html">
+<meta property="og:url" content="https://gompangs.github.io/2018/11/18/Javascript/index.html">
 <meta property="og:site_name" content="곰팡이 개발연구소">
 <meta property="og:description" content="개요Javascript는 널리 알려진 것 처럼 비동기 함수 위주의 동작을 잘 구현한 언어이다. 특히 NodeJS에 와서는 그 비동기 함수로 인한 장점을 많이 누릴 수 있게 된 것 같은데 아무래도 평소에 개발하는건 대부분 Java로 하기 때문에 Javascript를 개인적으로 공부해보고 무슨 장점이 있는지에 대해 알아보려고 한다. 일단 Promise가 무엇인">
 <meta property="og:locale" content="KR">
@@ -21,6 +21,7 @@
 <meta name="twitter:description" content="개요Javascript는 널리 알려진 것 처럼 비동기 함수 위주의 동작을 잘 구현한 언어이다. 특히 NodeJS에 와서는 그 비동기 함수로 인한 장점을 많이 누릴 수 있게 된 것 같은데 아무래도 평소에 개발하는건 대부분 Java로 하기 때문에 Javascript를 개인적으로 공부해보고 무슨 장점이 있는지에 대해 알아보려고 한다. 일단 Promise가 무엇인">
 <meta name="twitter:image" content="https://gompangs.github.io/images/promise-resolve-reject.png">
     
+    <link rel="canonical" href="https://gompangs.github.io/2018/11/18/javascript/">
     
         
           
@@ -93,16 +94,16 @@
     <br>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2018/11/18/Javascript/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2018/11/18/Javascript/&text=Javascript Promise에 관하여"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2018/11/18/Javascript/&title=Javascript Promise에 관하여"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2018/11/18/Javascript/&is_video=false&description=Javascript Promise에 관하여"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Javascript Promise에 관하여&body=Check out this article: http://yoursite.com/2018/11/18/Javascript/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2018/11/18/Javascript/&title=Javascript Promise에 관하여"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2018/11/18/Javascript/&title=Javascript Promise에 관하여"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2018/11/18/Javascript/&title=Javascript Promise에 관하여"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2018/11/18/Javascript/&title=Javascript Promise에 관하여"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2018/11/18/Javascript/&name=Javascript Promise에 관하여&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gompangs.github.io/2018/11/18/Javascript/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gompangs.github.io/2018/11/18/Javascript/&text=Javascript Promise에 관하여" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gompangs.github.io/2018/11/18/Javascript/&title=Javascript Promise에 관하여" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gompangs.github.io/2018/11/18/Javascript/&is_video=false&description=Javascript Promise에 관하여" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Javascript Promise에 관하여&body=Check out this article: https://gompangs.github.io/2018/11/18/Javascript/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gompangs.github.io/2018/11/18/Javascript/&title=Javascript Promise에 관하여" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gompangs.github.io/2018/11/18/Javascript/&title=Javascript Promise에 관하여" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gompangs.github.io/2018/11/18/Javascript/&title=Javascript Promise에 관하여" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gompangs.github.io/2018/11/18/Javascript/&title=Javascript Promise에 관하여" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gompangs.github.io/2018/11/18/Javascript/&name=Javascript Promise에 관하여&description=" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -158,7 +159,7 @@
 <p>일단 Promise가 무엇인지부터 살펴보도록 하자</p>
 <blockquote>
 <p>The <strong>Promise</strong> object represents the eventual completion (or failure) of an asynchronous operation, and its resulting value.</p>
-<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank" rel="noopener">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise</a></p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank" rel="external nofollow noopener noreferrer">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise</a></p>
 </blockquote>
 <p>설명에 따르면 Promise는 비동기 함수의 동작이나 return value의 실패/성공을 받아서 궁극적인 완성을 시키기 위함 이라고 한다.</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>( <span class="comment">/* executor */</span> <span class="function"><span class="keyword">function</span>(<span class="params">resolve, reject</span>) </span>&#123; ... &#125; );</span><br></pre></td></tr></table></figure>
@@ -202,16 +203,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2018/11/18/Javascript/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2018/11/18/Javascript/&text=Javascript Promise에 관하여"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2018/11/18/Javascript/&title=Javascript Promise에 관하여"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2018/11/18/Javascript/&is_video=false&description=Javascript Promise에 관하여"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Javascript Promise에 관하여&body=Check out this article: http://yoursite.com/2018/11/18/Javascript/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2018/11/18/Javascript/&title=Javascript Promise에 관하여"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2018/11/18/Javascript/&title=Javascript Promise에 관하여"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2018/11/18/Javascript/&title=Javascript Promise에 관하여"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2018/11/18/Javascript/&title=Javascript Promise에 관하여"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2018/11/18/Javascript/&name=Javascript Promise에 관하여&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gompangs.github.io/2018/11/18/Javascript/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gompangs.github.io/2018/11/18/Javascript/&text=Javascript Promise에 관하여" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gompangs.github.io/2018/11/18/Javascript/&title=Javascript Promise에 관하여" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gompangs.github.io/2018/11/18/Javascript/&is_video=false&description=Javascript Promise에 관하여" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Javascript Promise에 관하여&body=Check out this article: https://gompangs.github.io/2018/11/18/Javascript/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gompangs.github.io/2018/11/18/Javascript/&title=Javascript Promise에 관하여" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gompangs.github.io/2018/11/18/Javascript/&title=Javascript Promise에 관하여" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gompangs.github.io/2018/11/18/Javascript/&title=Javascript Promise에 관하여" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gompangs.github.io/2018/11/18/Javascript/&title=Javascript Promise에 관하여" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gompangs.github.io/2018/11/18/Javascript/&name=Javascript Promise에 관하여&description=" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -229,7 +230,7 @@
         
         <footer id="footer">
   <div class="footer-left">
-    Copyright &copy; 2018 Gompangs(stacks5978@gmail.com)
+    Copyright &copy; 2019 Gompangs(stacks5978@gmail.com)
   </div>
   <div class="footer-right">
     <nav>
