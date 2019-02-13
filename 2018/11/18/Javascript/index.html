@@ -1,4 +1,7 @@
-<!DOCTYPE html><html lang="KR"><head>
+<!DOCTYPE html>
+<html lang="KR">
+
+<head>
   <meta name="generator" content="Hexo 3.8.0">
   <!-- so meta -->
   <meta charset="utf-8">
@@ -152,15 +155,15 @@
         <p>설명에 따르면 Promise는 비동기 함수의 동작이나 return value의 실패/성공을 받아서 궁극적인 완성을 시키기 위함 이라고 한다.</p>
         <figure class="highlight javascript">
           <table>
-            <tbody><tr>
+            <tr>
               <td class="gutter">
                 <pre><span class="line">1</span><br></pre>
               </td>
               <td class="code">
-                <pre><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>( <span class="comment">/* executor */</span> <span class="function"><span class="keyword">function</span>(<span class="params">resolve, reject</span>) </span>{ ... } );</span><br></pre>
+                <pre><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>( <span class="comment">/* executor */</span> <span class="function"><span class="keyword">function</span>(<span class="params">resolve, reject</span>) </span>&#123; ... &#125; );</span><br></pre>
               </td>
             </tr>
-          </tbody></table>
+          </table>
         </figure>
         <p>Promise는 위와 같이 resolve와 reject라는 parameter를 가지고 있다.</p>
         <p><img src="https://gompangs.github.io/images/promise-resolve-reject.png" alt=""></p>
@@ -228,7 +231,7 @@
 
     <footer id="footer">
       <div class="footer-left">
-        Copyright © 2019 Gompangs(<a href="mailto:stacks5978@gmail.com" class="auto-link auto-link-email" target="_blank" rel="external nofollow noopener noreferrer">stacks5978@gmail.com</a>)
+        Copyright &copy; 2019 Gompangs(<a href="mailto:stacks5978@gmail.com" class="auto-link auto-link-email" target="_blank" rel="external nofollow noopener noreferrer">stacks5978@gmail.com</a>)
       </div>
       <div class="footer-right">
         <nav>
@@ -249,10 +252,10 @@
       </div>
     </footer>
   </div>
+</body>
 
-
-
-
+</html>
+<!-- styles -->
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 <link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
 <!-- jquery -->
@@ -274,11 +277,11 @@
     a.async = 1;
     a.src = g;
     m.parentNode.insertBefore(a, m)
-  })(window, document, 'script', '<a href="//www.google-analytics.com/analytics.js'
+  })(window, document, 'script', '<a href="//www.google-analytics.com/analytics.js', 'ga'
     " class="
     auto - link auto - link - url " target="
     _blank " rel="
-    noopener noreferrer ">www.google-analytics.com/analytics.js'</a>, 'ga');
+    noopener noreferrer ">www.google-analytics.com/analytics.js','ga'</a>);
     ga('create', 'UA-68696489-4', 'auto'); ga('send', 'pageview');
 </script>
 
@@ -300,4 +303,4 @@
     noopener noreferrer ">.disqus.com/embed.js'</a>;
       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   }());
-</script><script type="text/javascript" charset="utf-8" src="/js/lazyload-plugin/lazyload.intersectionObserver.min.js"></script></body></html><!-- styles -->
+</script>

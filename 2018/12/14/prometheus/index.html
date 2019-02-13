@@ -1,4 +1,7 @@
-<!DOCTYPE html><html lang="KR"><head>
+<!DOCTYPE html>
+<html lang="KR">
+
+<head>
   <meta name="generator" content="Hexo 3.8.0">
   <!-- so meta -->
   <meta charset="utf-8">
@@ -209,7 +212,7 @@
         <h2 id="서버-내부-모듈"><a href="#서버-내부-모듈" class="headerlink" title="서버 내부 모듈"></a>서버 내부 모듈</h2>
         <h3 id="Retrival"><a href="#Retrival" class="headerlink" title="Retrival"></a>Retrival</h3>
         <p>메트릭을 수집할 대상 서버에 접근해서(HTTP) 메트릭을 가져오거나, 아니면 Pushgateway를 통해서 접근할 수 없는 곳에 있는 데이터(inner server, firewall 내부의 metric 등)를 가져오는 등의 역할을 하게 된다</p>
-        <p>Pushgateway는 쉽게말해 Proxy Forwarding을 해서 접근할 수 없는 곳에 데이터가 존재하는 경우 이때 사용할 수 있는 대안이라고 보면 된다. 사내망에 데이터가 있어서 외부에서 scrape를 하고싶어도 접근이 안되는 경우 말이다. 아무래도 메트릭 발생 서버 -> 메트릭 집계 서버 가 아닌 메트릭 집계서버가 메트릭 발생 서버에 직접 접근을 해서 데이터를 가져가기 때문에 존재하는 개념인 듯 하다.</p>
+        <p>Pushgateway는 쉽게말해 Proxy Forwarding을 해서 접근할 수 없는 곳에 데이터가 존재하는 경우 이때 사용할 수 있는 대안이라고 보면 된다. 사내망에 데이터가 있어서 외부에서 scrape를 하고싶어도 접근이 안되는 경우 말이다. 아무래도 메트릭 발생 서버 -&gt; 메트릭 집계 서버 가 아닌 메트릭 집계서버가 메트릭 발생 서버에 직접 접근을 해서 데이터를 가져가기 때문에 존재하는 개념인 듯 하다.</p>
         <h3 id="TSDB-Time-series-Database"><a href="#TSDB-Time-series-Database" class="headerlink" title="TSDB(Time-series Database)"></a>TSDB(Time-series Database)</h3>
         <p>이렇게 가져온 데이터를 저장하고, 시간의 흐름에 따라 조회를 할 수 있어야 하므로 시-계열 데이터(time-series) 를 저장할 수 있는 저장소가 prometheus 내부에 구현이 되어 있다.</p>
         <p>데이터를 저장하는 방법은 Local Storage, Remote Storage를 이용하는 방법 두 가지가 존재한다. 대부분 Local Storage를 쓰는걸로 default로 사용하겠지만 필요에 따라서 원격지에 있는 서버에 데이터를 저장해서 사용을 한다고 한다</p>
@@ -219,15 +222,15 @@
         <p>프로메테우스의 메트릭은 위와 같이 수집이 되는데 </p>
         <figure class="highlight">
           <table>
-            <tbody><tr>
+            <tr>
               <td class="gutter">
                 <pre><span class="line">1</span><br></pre>
               </td>
               <td class="code">
-                <pre><span class="line">메트릭명{필드1=값, 필드2=값} 샘플링데이터</span><br></pre>
+                <pre><span class="line">메트릭명&#123;필드1=값, 필드2=값&#125; 샘플링데이터</span><br></pre>
               </td>
             </tr>
-          </tbody></table>
+          </table>
         </figure>
         <p>실제로 timestamp값은 프로메테우스 서버 내부에서 저장될 때 같이 넣게 되고 export하는 부분에서는 메트릭명-샘플링데이터와 같은 형태로 보여지게 된다.</p>
         <p><img src="https://3.bp.blogspot.com/-eduU9hfXlCY/WhJT2x6oFqI/AAAAAAAAff8/sUiEeCflN-E9oY5Vn98ypNgx-fYlxv4IgCLcBGAs/s1600/Micrometer-Boot2.png" alt="img"></p>
@@ -243,15 +246,15 @@
         <p>알람을 거는 기준은 Rule을 작성해서 load시키는 방식으로 동작하는데</p>
         <figure class="highlight plain">
           <table>
-            <tbody><tr>
+            <tr>
               <td class="gutter">
                 <pre><span class="line">1</span><br></pre>
               </td>
               <td class="code">
-                <pre><span class="line">expr: job:request_latency_seconds:mean5m{job="myjob"} > 0.5</span><br></pre>
+                <pre><span class="line">expr: job:request_latency_seconds:mean5m&#123;job=&quot;myjob&quot;&#125; &gt; 0.5</span><br></pre>
               </td>
             </tr>
-          </tbody></table>
+          </table>
         </figure>
         <p>와 같이 expression을 작성하는 것으로 알람을 전송할 수 있다. 특정 메트릭의 값이 어느정도 선(threshold)을 넘는다거나, 낮아진다거나 하는 메트릭을 보고 판단을 할 수 있다.</p>
         <p>다만, 이 또한 Grafana를 사용하게 된다면 Grafana에서도 동일하게 알람매니저를 제공을 하고 있는데, 아무래도 Grafana쪽이 사용하기 더 쉽고 직관적이기 때문에 이걸 직접 사용할까는 싶지만, 그래도 expression을 이용해서 더 복잡한 조건을 걸어서 알람을 노티해주는 방식이 있다는건 좋다.</p>
@@ -264,7 +267,7 @@
         <p>본인은 odroid의 armv7을 사용하고 있어서 해당 바이너리로 받게 되었고,</p>
         <figure class="highlight shell">
           <table>
-            <tbody><tr>
+            <tr>
               <td class="gutter">
                 <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre>
               </td>
@@ -272,7 +275,7 @@
                 <pre><span class="line">wget <a href="https://github.com/prometheus/prometheus/releases/download/v2.5.0/prometheus-2.5.0.linux-armv7.tar.gz" class="auto-link auto-link-url" target="_blank" rel="external nofollow noopener noreferrer">https://github.com/prometheus/prometheus/releases/download/v2.5.0/prometheus-2.5.0.linux-armv7.tar.gz</a></span><br><span class="line">tar xvfz prometheus-2.5.0.linux-armv7.tar.gz</span><br><span class="line">cd prometheus-2.5.0.linux-armv7</span><br><span class="line">./prometheus</span><br></pre>
               </td>
             </tr>
-          </tbody></table>
+          </table>
         </figure>
         <p>로 바로 실행을 할 수 있다. 다만 지금은 서버가 뜨긴 하지만 아무런 메트릭을 수집하지 않고있다. 이는 prometheus.yml에서 scape를 할 target을 지정하지 않았기 때문이다. 지금은 단순히 9090포트로 접근을 해보면 Prometheus의 대시보드를 볼 수 있을것이다</p>
         <p><img src="https://www.joyfulbikeshedding.com/images/2018/prometheus-42e58d9a.png" alt="img"></p>
@@ -280,15 +283,15 @@
         <h3 id="prometheus-yml"><a href="#prometheus-yml" class="headerlink" title="prometheus.yml"></a>prometheus.yml</h3>
         <figure class="highlight yaml">
           <table>
-            <tbody><tr>
+            <tr>
               <td class="gutter">
                 <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre>
               </td>
               <td class="code">
-                <pre><span class="line"><span class="comment"># my global config</span></span><br><span class="line"><span class="attr">global:</span></span><br><span class="line"><span class="attr">  scrape_interval:</span>     <span class="number">15</span><span class="string">s</span> <span class="comment"># Set the scrape interval to every 15 seconds. Default is every 1 minute.</span></span><br><span class="line"><span class="attr">  evaluation_interval:</span> <span class="number">15</span><span class="string">s</span> <span class="comment"># Evaluate rules every 15 seconds. The default is every 1 minute.</span></span><br><span class="line">  <span class="comment"># scrape_timeout is set to the global default (10s).</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Alertmanager configuration</span></span><br><span class="line"><span class="attr">alerting:</span></span><br><span class="line"><span class="attr">  alertmanagers:</span></span><br><span class="line"><span class="attr">  - static_configs:</span></span><br><span class="line"><span class="attr">    - targets:</span></span><br><span class="line">      <span class="comment"># - alertmanager:9093</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Load rules once and periodically evaluate them according to the global 'evaluation_interval'.</span></span><br><span class="line"><span class="attr">rule_files:</span></span><br><span class="line">  <span class="comment"># - "first_rules.yml"</span></span><br><span class="line">  <span class="comment"># - "second_rules.yml"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># A scrape configuration containing exactly one endpoint to scrape:</span></span><br><span class="line"><span class="comment"># Here it's Prometheus itself.</span></span><br><span class="line"><span class="attr">scrape_configs:</span></span><br><span class="line">  <span class="comment"># The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.</span></span><br><span class="line"><span class="attr">  - job_name:</span> <span class="string">'prometheus'</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># metrics_path defaults to '/metrics'</span></span><br><span class="line">    <span class="comment"># scheme defaults to 'http'.</span></span><br><span class="line"></span><br><span class="line"><span class="attr">    static_configs:</span></span><br><span class="line"><span class="attr">    - targets:</span> <span class="string">['localhost:9090']</span></span><br></pre>
+                <pre><span class="line"><span class="comment"># my global config</span></span><br><span class="line"><span class="attr">global:</span></span><br><span class="line"><span class="attr">  scrape_interval:</span>     <span class="number">15</span><span class="string">s</span> <span class="comment"># Set the scrape interval to every 15 seconds. Default is every 1 minute.</span></span><br><span class="line"><span class="attr">  evaluation_interval:</span> <span class="number">15</span><span class="string">s</span> <span class="comment"># Evaluate rules every 15 seconds. The default is every 1 minute.</span></span><br><span class="line">  <span class="comment"># scrape_timeout is set to the global default (10s).</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Alertmanager configuration</span></span><br><span class="line"><span class="attr">alerting:</span></span><br><span class="line"><span class="attr">  alertmanagers:</span></span><br><span class="line"><span class="attr">  - static_configs:</span></span><br><span class="line"><span class="attr">    - targets:</span></span><br><span class="line">      <span class="comment"># - alertmanager:9093</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Load rules once and periodically evaluate them according to the global 'evaluation_interval'.</span></span><br><span class="line"><span class="attr">rule_files:</span></span><br><span class="line">  <span class="comment"># - "first_rules.yml"</span></span><br><span class="line">  <span class="comment"># - "second_rules.yml"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># A scrape configuration containing exactly one endpoint to scrape:</span></span><br><span class="line"><span class="comment"># Here it's Prometheus itself.</span></span><br><span class="line"><span class="attr">scrape_configs:</span></span><br><span class="line">  <span class="comment"># The job name is added as a label `job=&lt;job_name&gt;` to any timeseries scraped from this config.</span></span><br><span class="line"><span class="attr">  - job_name:</span> <span class="string">'prometheus'</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># metrics_path defaults to '/metrics'</span></span><br><span class="line">    <span class="comment"># scheme defaults to 'http'.</span></span><br><span class="line"></span><br><span class="line"><span class="attr">    static_configs:</span></span><br><span class="line"><span class="attr">    - targets:</span> <span class="string">['localhost:9090']</span></span><br></pre>
               </td>
             </tr>
-          </tbody></table>
+          </table>
         </figure>
         <p>설정이 다른 모니터링 서비스들에 비해서는 매우 간단한 편이다. (모든 설정이 간편한건 아니다. default로 설정 되어있는 config가 간단해서 그렇지, 실제로 모든 config의 field를 보면 상당히 양이 많다. 자세한건 <a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/" rel="external nofollow noopener noreferrer" target="_blank">https://prometheus.io/docs/prometheus/latest/configuration/configuration/</a>) </p>
         <h4 id="config-설명"><a href="#config-설명" class="headerlink" title="config 설명"></a>config 설명</h4>
@@ -309,7 +312,7 @@
         <p>간단하게 static_configs의 target만 고쳐서 prometheus를 띄워보도록 하자</p>
         <figure class="highlight yaml">
           <table>
-            <tbody><tr>
+            <tr>
               <td class="gutter">
                 <pre><span class="line">1</span><br></pre>
               </td>
@@ -317,7 +320,7 @@
                 <pre><span class="line"><span class="attr">- targets:</span> <span class="string">['192.168.0.3:9090']</span></span><br></pre>
               </td>
             </tr>
-          </tbody></table>
+          </table>
         </figure>
         <p><img src="/images/prom1.png" alt="img"> </p>
         <p>서버가 잘 실행이 되면 위와 같이 <strong><em>Server is ready to receive web requests.</em></strong> 라는 메세지가 나오게 된다.</p>
@@ -332,56 +335,56 @@
         <p>참고. Spring boot용 client는 actuator를 활용해서 구현이 되어 있다(<a href="https://www.callicoder.com/spring-boot-actuator-metrics-monitoring-dashboard-prometheus-grafana/" rel="external nofollow noopener noreferrer" target="_blank">https://www.callicoder.com/spring-boot-actuator-metrics-monitoring-dashboard-prometheus-grafana/</a>) 를 참고하면 연동방법에 대해 나와 있다.</p>
         <figure class="highlight xml">
           <table>
-            <tbody><tr>
+            <tr>
               <td class="gutter">
                 <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre>
               </td>
               <td class="code">
-                <pre><span class="line"><span class="comment"><!-- The client --></span></span><br><span class="line"><span class="tag"><<span class="name">dependency</span>></span></span><br><span class="line">  <span class="tag"><<span class="name">groupId</span>></span>io.prometheus<span class="tag"></<span class="name">groupId</span>></span></span><br><span class="line">  <span class="tag"><<span class="name">artifactId</span>></span>simpleclient<span class="tag"></<span class="name">artifactId</span>></span></span><br><span class="line">  <span class="tag"><<span class="name">version</span>></span>0.6.0<span class="tag"></<span class="name">version</span>></span></span><br><span class="line"><span class="tag"></<span class="name">dependency</span>></span></span><br><span class="line"><span class="comment"><!-- Hotspot JVM metrics--></span></span><br><span class="line"><span class="tag"><<span class="name">dependency</span>></span></span><br><span class="line">  <span class="tag"><<span class="name">groupId</span>></span>io.prometheus<span class="tag"></<span class="name">groupId</span>></span></span><br><span class="line">  <span class="tag"><<span class="name">artifactId</span>></span>simpleclient_hotspot<span class="tag"></<span class="name">artifactId</span>></span></span><br><span class="line">  <span class="tag"><<span class="name">version</span>></span>0.6.0<span class="tag"></<span class="name">version</span>></span></span><br><span class="line"><span class="tag"></<span class="name">dependency</span>></span></span><br><span class="line"><span class="comment"><!-- Exposition HTTPServer--></span></span><br><span class="line"><span class="tag"><<span class="name">dependency</span>></span></span><br><span class="line">  <span class="tag"><<span class="name">groupId</span>></span>io.prometheus<span class="tag"></<span class="name">groupId</span>></span></span><br><span class="line">  <span class="tag"><<span class="name">artifactId</span>></span>simpleclient_httpserver<span class="tag"></<span class="name">artifactId</span>></span></span><br><span class="line">  <span class="tag"><<span class="name">version</span>></span>0.6.0<span class="tag"></<span class="name">version</span>></span></span><br><span class="line"><span class="tag"></<span class="name">dependency</span>></span></span><br></pre>
+                <pre><span class="line"><span class="comment">&lt;!-- The client --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.prometheus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>simpleclient<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.6.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- Hotspot JVM metrics--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.prometheus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>simpleclient_hotspot<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.6.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- Exposition HTTPServer--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.prometheus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>simpleclient_httpserver<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.6.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre>
               </td>
             </tr>
-          </tbody></table>
+          </table>
         </figure>
         <p>dependency를 추가하고, spring boot dependency를 추가하고나서 Java bean config쪽을 구성해보자</p>
         <figure class="highlight java">
           <table>
-            <tbody><tr>
+            <tr>
               <td class="gutter">
                 <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre>
               </td>
               <td class="code">
-                <pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrometheusConfig</span> </span>{</span><br><span class="line">    <span class="meta">@PostConstruct</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span>{</span><br><span class="line">        DefaultExports.initialize(); <span class="comment">// Export JVM Metrics into http endpoint</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> HTTPServer <span class="title">prometheusServer</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>{</span><br><span class="line">        <a href="http://log.info" class="auto-link auto-link-url" target="_blank" rel="external nofollow noopener noreferrer">log.info</a>(<span class="string">"promethues server has started"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> HTTPServer(<span class="number">9090</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre>
+                <pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrometheusConfig</span> </span>&#123;</span><br><span class="line">    <span class="meta">@PostConstruct</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span>&#123;</span><br><span class="line">        DefaultExports.initialize(); <span class="comment">// Export JVM Metrics into http endpoint</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> HTTPServer <span class="title">prometheusServer</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <a href="http://log.info" class="auto-link auto-link-url" target="_blank" rel="external nofollow noopener noreferrer">log.info</a>(<span class="string">"promethues server has started"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> HTTPServer(<span class="number">9090</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre>
               </td>
             </tr>
-          </tbody></table>
+          </table>
         </figure>
         <p>보면 그냥 configuration 클래스가 로딩될 때, DefaultExports로 initialize를 해주고, prometheus 서버를 띄워주는 역할만 하고 있다.</p>
         <p>이렇게 구성해서 띄워보면, 실제로 9090포트로 prometheus metric exporter가 구동이 되게 된다. 접근해보면 아래와 같은 페이지가 나오게 된다</p>
         <figure class="highlight html">
           <table>
-            <tbody><tr>
+            <tr>
               <td class="gutter">
                 <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre>
               </td>
               <td class="code">
-                <pre><span class="line"># HELP jvm_memory_bytes_used Used bytes of a given JVM memory area.</span><br><span class="line"># TYPE jvm_memory_bytes_used gauge</span><br><span class="line">jvm_memory_bytes_used{area="heap",} 8.0815512E7</span><br><span class="line">jvm_memory_bytes_used{area="nonheap",} 4.3263472E7</span><br><span class="line"># HELP jvm_memory_bytes_committed Committed (bytes) of a given JVM memory area.</span><br><span class="line"># TYPE jvm_memory_bytes_committed gauge</span><br><span class="line">jvm_memory_bytes_committed{area="heap",} 1.6777216E8</span><br><span class="line">jvm_memory_bytes_committed{area="nonheap",} 4.5481984E7</span><br><span class="line"># HELP jvm_memory_bytes_max Max (bytes) of a given JVM memory area.</span><br><span class="line"># TYPE jvm_memory_bytes_max gauge</span><br><span class="line">jvm_memory_bytes_max{area="heap",} 1.908932608E9</span><br><span class="line">jvm_memory_bytes_max{area="nonheap",} -1.0</span><br><span class="line"># HELP jvm_memory_bytes_init Initial bytes of a given JVM memory area.</span><br><span class="line"># TYPE jvm_memory_bytes_init gauge</span><br><span class="line">jvm_memory_bytes_init{area="heap",} 1.34217728E8</span><br><span class="line">jvm_memory_bytes_init{area="nonheap",} 2555904.0</span><br><span class="line"># HELP jvm_memory_pool_bytes_used Used bytes of a given JVM memory pool.</span><br><span class="line"># TYPE jvm_memory_pool_bytes_used gauge</span><br><span class="line">jvm_memory_pool_bytes_used{pool="Code Cache",} 7142976.0</span><br><span class="line">jvm_memory_pool_bytes_used{pool="Metaspace",} 3.1820632E7</span><br><span class="line">jvm_memory_pool_bytes_used{pool="Compressed Class Space",} 4299864.0</span><br><span class="line">jvm_memory_pool_bytes_used{pool="PS Eden Space",} 5.7521336E7</span><br><span class="line">jvm_memory_pool_bytes_used{pool="PS Survivor Space",} 8909040.0</span><br><span class="line">jvm_memory_pool_bytes_used{pool="PS Old Gen",} 1.4385136E7</span><br><span class="line">...</span><br></pre>
+                <pre><span class="line"># HELP jvm_memory_bytes_used Used bytes of a given JVM memory area.</span><br><span class="line"># TYPE jvm_memory_bytes_used gauge</span><br><span class="line">jvm_memory_bytes_used&#123;area="heap",&#125; 8.0815512E7</span><br><span class="line">jvm_memory_bytes_used&#123;area="nonheap",&#125; 4.3263472E7</span><br><span class="line"># HELP jvm_memory_bytes_committed Committed (bytes) of a given JVM memory area.</span><br><span class="line"># TYPE jvm_memory_bytes_committed gauge</span><br><span class="line">jvm_memory_bytes_committed&#123;area="heap",&#125; 1.6777216E8</span><br><span class="line">jvm_memory_bytes_committed&#123;area="nonheap",&#125; 4.5481984E7</span><br><span class="line"># HELP jvm_memory_bytes_max Max (bytes) of a given JVM memory area.</span><br><span class="line"># TYPE jvm_memory_bytes_max gauge</span><br><span class="line">jvm_memory_bytes_max&#123;area="heap",&#125; 1.908932608E9</span><br><span class="line">jvm_memory_bytes_max&#123;area="nonheap",&#125; -1.0</span><br><span class="line"># HELP jvm_memory_bytes_init Initial bytes of a given JVM memory area.</span><br><span class="line"># TYPE jvm_memory_bytes_init gauge</span><br><span class="line">jvm_memory_bytes_init&#123;area="heap",&#125; 1.34217728E8</span><br><span class="line">jvm_memory_bytes_init&#123;area="nonheap",&#125; 2555904.0</span><br><span class="line"># HELP jvm_memory_pool_bytes_used Used bytes of a given JVM memory pool.</span><br><span class="line"># TYPE jvm_memory_pool_bytes_used gauge</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="Code Cache",&#125; 7142976.0</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="Metaspace",&#125; 3.1820632E7</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="Compressed Class Space",&#125; 4299864.0</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="PS Eden Space",&#125; 5.7521336E7</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="PS Survivor Space",&#125; 8909040.0</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="PS Old Gen",&#125; 1.4385136E7</span><br><span class="line">...</span><br></pre>
               </td>
             </tr>
-          </tbody></table>
+          </table>
         </figure>
         <p>값을 보게 되면 JVM에 사용되는 메트릭에 대한 정보가 export되었다는 걸 알 수 있다</p>
         <p>실제 DefaultExports.initialize(); 가 어떻게 구현되었는지를 보면 어떤 정보가 export되는지 볼 수 있는데</p>
         <figure class="highlight java">
           <table>
-            <tbody><tr>
+            <tr>
               <td class="gutter">
                 <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre>
               </td>
               <td class="code">
-                <pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">initialize</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (!initialized) {</span><br><span class="line">        (<span class="keyword">new</span> StandardExports()).register();</span><br><span class="line">        (<span class="keyword">new</span> MemoryPoolsExports()).register();</span><br><span class="line">        (<span class="keyword">new</span> MemoryAllocationExports()).register();</span><br><span class="line">        (<span class="keyword">new</span> BufferPoolsExports()).register();</span><br><span class="line">        (<span class="keyword">new</span> GarbageCollectorExports()).register();</span><br><span class="line">        (<span class="keyword">new</span> ThreadExports()).register();</span><br><span class="line">        (<span class="keyword">new</span> ClassLoadingExports()).register();</span><br><span class="line">        (<span class="keyword">new</span> VersionInfoExports()).register();</span><br><span class="line">        initialized = <span class="keyword">true</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">}</span><br></pre>
+                <pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">initialize</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!initialized) &#123;</span><br><span class="line">        (<span class="keyword">new</span> StandardExports()).register();</span><br><span class="line">        (<span class="keyword">new</span> MemoryPoolsExports()).register();</span><br><span class="line">        (<span class="keyword">new</span> MemoryAllocationExports()).register();</span><br><span class="line">        (<span class="keyword">new</span> BufferPoolsExports()).register();</span><br><span class="line">        (<span class="keyword">new</span> GarbageCollectorExports()).register();</span><br><span class="line">        (<span class="keyword">new</span> ThreadExports()).register();</span><br><span class="line">        (<span class="keyword">new</span> ClassLoadingExports()).register();</span><br><span class="line">        (<span class="keyword">new</span> VersionInfoExports()).register();</span><br><span class="line">        initialized = <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre>
               </td>
             </tr>
-          </tbody></table>
+          </table>
         </figure>
         <p>메모리와 쓰레드, 그리고 GC등에 대한 정보를 가져와서 등록하는 부분이 있는걸 볼 수 있다.</p>
         <p>이제 JVM에 관련된 메트릭 말고 실제 원하는 메트릭을 export를 해봐야 하는데, 그러기 위해서는 export를 할 수 있는 metric의 타입이 어떤것들이 있는지부터 알아보고 가야한다</p>
@@ -413,21 +416,21 @@
         <h3 id="Gauge-사용해보기"><a href="#Gauge-사용해보기" class="headerlink" title="Gauge 사용해보기"></a>Gauge 사용해보기</h3>
         <figure class="highlight java">
           <table>
-            <tbody><tr>
+            <tr>
               <td class="gutter">
                 <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre>
               </td>
               <td class="code">
-                <pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SampleController</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> Gauge sampleGauge;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostConstruct</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>{</span><br><span class="line">        sampleGauge = <a href="http://Gauge.build" class="auto-link auto-link-url" target="_blank" rel="external nofollow noopener noreferrer">Gauge.build</a>(<span class="string">"sample"</span>, <span class="string">"sample metrics"</span>).register();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">sample</span><span class="params">()</span> </span>{</span><br><span class="line">        sampleGauge.inc();</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"sample"</span>;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre>
+                <pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SampleController</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Gauge sampleGauge;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostConstruct</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        sampleGauge = <a href="http://Gauge.build" class="auto-link auto-link-url" target="_blank" rel="external nofollow noopener noreferrer">Gauge.build</a>(<span class="string">"sample"</span>, <span class="string">"sample metrics"</span>).register();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">sample</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        sampleGauge.inc();</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"sample"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre>
               </td>
             </tr>
-          </tbody></table>
+          </table>
         </figure>
         <p>Gauge를 사용해봤는데, 위와 같이 사용을 하면 된다. Gauge의 build를 통해서 메트릭의 이름을 지정해주고 이를 register(); 해주면 해당 메트릭이 등록이 되게 된다.</p>
         <p>그리고 sample을 호출할때마다 sampleGauge의 값이 inc가 된다.</p>
         <figure class="highlight plain">
           <table>
-            <tbody><tr>
+            <tr>
               <td class="gutter">
                 <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>
               </td>
@@ -435,12 +438,12 @@
                 <pre><span class="line"># HELP sample sample metrics</span><br><span class="line"># TYPE sample gauge</span><br><span class="line">sample 0.0</span><br></pre>
               </td>
             </tr>
-          </tbody></table>
+          </table>
         </figure>
         <p>처음에 spring boot를 띄우게 되면 9090포트로 위와같은 메트릭이 export가 되게 되는데, localhost:8080으로 sample을 호출을 하게 되면 위의 sample값이 1.0 , 2.0 … 와 같이 변하게 된다.</p>
         <figure class="highlight java">
           <table>
-            <tbody><tr>
+            <tr>
               <td class="gutter">
                 <pre><span class="line">1</span><br></pre>
               </td>
@@ -448,28 +451,28 @@
                 <pre><span class="line"><a href="http://Counter.build" class="auto-link auto-link-url" target="_blank" rel="external nofollow noopener noreferrer">Counter.build</a>(<span class="string">"someCounter"</span>, <span class="string">"Some counter"</span>).register();</span><br></pre>
               </td>
             </tr>
-          </tbody></table>
+          </table>
         </figure>
-        <p>Counter의 경우에도 위와같이 build -> register를 하게 되면 metric에 등록이 되게 된다.</p>
+        <p>Counter의 경우에도 위와같이 build -&gt; register를 하게 되면 metric에 등록이 되게 된다.</p>
         <p>간단한 gauge랑 counter의 경우는 위와같이 쓰면 되지만 실제로 많이 사용하게 될 메트릭들은 대부분 histogram과 summary일텐데 이건 공부가 좀더 필요해보인다. spring boot prometheus client(micrometer)를 기본으로 export하면 대부분 summary를 많이 사용하는 걸로 보인다(histogram은 안쓰고 summary만 씀)</p>
         <h3 id="Spring-boot-exporter"><a href="#Spring-boot-exporter" class="headerlink" title="Spring boot exporter"></a>Spring boot exporter</h3>
         <p>custom하게 metric을 export하는건 위에서 아주 살짝 맛만 봤는데, 실제로 잘 구현된 metric은 어떻게 구성되는지를 한번 알아보자. spring boot의 경우 actuator를 사용하면 별도의 설정없이 tomcat, jvm, spring에 관련된 정보를 export할 수 있다. (<a href="https://dzone.com/articles/monitoring-using-spring-boot-2-prometheus-and-graf" rel="external nofollow noopener noreferrer" target="_blank">https://dzone.com/articles/monitoring-using-spring-boot-2-prometheus-and-graf</a>)</p>
         <figure class="highlight xml">
           <table>
-            <tbody><tr>
+            <tr>
               <td class="gutter">
                 <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre>
               </td>
               <td class="code">
-                <pre><span class="line"><span class="comment"><!-- Spring boot actuator to expose metrics endpoint --></span></span><br><span class="line"><span class="tag"><<span class="name">dependency</span>></span></span><br><span class="line">    <span class="tag"><<span class="name">groupId</span>></span>org.springframework.boot<span class="tag"></<span class="name">groupId</span>></span></span><br><span class="line">    <span class="tag"><<span class="name">artifactId</span>></span>spring-boot-starter-actuator<span class="tag"></<span class="name">artifactId</span>></span></span><br><span class="line"><span class="tag"></<span class="name">dependency</span>></span></span><br><span class="line"><span class="comment"><!-- Micormeter core dependecy  --></span></span><br><span class="line"><span class="tag"><<span class="name">dependency</span>></span></span><br><span class="line">    <span class="tag"><<span class="name">groupId</span>></span>io.micrometer<span class="tag"></<span class="name">groupId</span>></span></span><br><span class="line">    <span class="tag"><<span class="name">artifactId</span>></span>micrometer-core<span class="tag"></<span class="name">artifactId</span>></span></span><br><span class="line"><span class="tag"></<span class="name">dependency</span>></span></span><br><span class="line"><span class="comment"><!-- Micrometer Prometheus registry  --></span></span><br><span class="line"><span class="tag"><<span class="name">dependency</span>></span></span><br><span class="line">    <span class="tag"><<span class="name">groupId</span>></span>io.micrometer<span class="tag"></<span class="name">groupId</span>></span></span><br><span class="line">    <span class="tag"><<span class="name">artifactId</span>></span>micrometer-registry-prometheus<span class="tag"></<span class="name">artifactId</span>></span></span><br><span class="line"><span class="tag"></<span class="name">dependency</span>></span></span><br></pre>
+                <pre><span class="line"><span class="comment">&lt;!-- Spring boot actuator to expose metrics endpoint --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- Micormeter core dependecy  --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.micrometer<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>micrometer-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- Micrometer Prometheus registry  --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.micrometer<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>micrometer-registry-prometheus<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre>
               </td>
             </tr>
-          </tbody></table>
+          </table>
         </figure>
         <p>pom.xml에 위의 dependency를 import하고</p>
         <figure class="highlight yaml">
           <table>
-            <tbody><tr>
+            <tr>
               <td class="gutter">
                 <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre>
               </td>
@@ -477,35 +480,35 @@
                 <pre><span class="line"></span><br><span class="line"><span class="comment">#Metrics related configurations</span></span><br><span class="line"><span class="string">management.endpoint.metrics.enabled=true</span></span><br><span class="line"><span class="string">management.endpoints.web.exposure.include=*</span></span><br><span class="line"><span class="string">management.endpoint.prometheus.enabled=true</span></span><br><span class="line"><span class="string">management.metrics.export.prometheus.enabled=true</span></span><br></pre>
               </td>
             </tr>
-          </tbody></table>
+          </table>
         </figure>
         <p><a href="http://application.properties" class="auto-link auto-link-url" target="_blank" rel="external nofollow noopener noreferrer">application.properties</a>에 위와 같은 config를 넣어주게 되면 localhost:8080/actuator/prometheus로 metric이 export되게 된다</p>
         <p>그리고 grafana에서 보여지게 될 tag를 붙여줘야 한다</p>
         <p>@Configuration 클래스를 하나 만들어서 아래의 bean을 등록해주자</p>
         <figure class="highlight java">
           <table>
-            <tbody><tr>
+            <tr>
               <td class="gutter">
                 <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre>
               </td>
               <td class="code">
-                <pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrometheusCustomConfig</span> </span>{</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function">MeterRegistryCustomizer<MeterRegistry> <span class="title">metricsCommonTags</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> registry -> registry.config().commonTags(<span class="string">"application"</span>, <span class="string">"PROMETHEUS-SAMPLE-SERVER"</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre>
+                <pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrometheusCustomConfig</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function">MeterRegistryCustomizer&lt;MeterRegistry&gt; <span class="title">metricsCommonTags</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> registry -&gt; registry.config().commonTags(<span class="string">"application"</span>, <span class="string">"PROMETHEUS-SAMPLE-SERVER"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre>
               </td>
             </tr>
-          </tbody></table>
+          </table>
         </figure>
         <p>이렇게 해야 grafana에서 여러개의 scrape target이 있을때 tag를 가지고 구분을 할 수 있게 된다.</p>
         <figure class="highlight html">
           <table>
-            <tbody><tr>
+            <tr>
               <td class="gutter">
                 <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre>
               </td>
               <td class="code">
-                <pre><span class="line"># HELP http_server_requests_seconds  </span><br><span class="line"># TYPE http_server_requests_seconds summary</span><br><span class="line">http_server_requests_seconds_count{exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator/prometheus",} 1.0</span><br><span class="line">http_server_requests_seconds_sum{exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator/prometheus",} 0.083506614</span><br><span class="line">http_server_requests_seconds_count{exception="None",method="GET",outcome="SUCCESS",status="200",uri="/",} 5.0</span><br><span class="line">http_server_requests_seconds_sum{exception="None",method="GET",outcome="SUCCESS",status="200",uri="/",} 0.094335788</span><br><span class="line">http_server_requests_seconds_count{exception="None",method="GET",outcome="SUCCESS",status="200",uri="/**/favicon.ico",} 4.0</span><br><span class="line">http_server_requests_seconds_sum{exception="None",method="GET",outcome="SUCCESS",status="200",uri="/**/favicon.ico",} 0.042993164</span><br><span class="line">http_server_requests_seconds_count{exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator",} 1.0</span><br><span class="line">http_server_requests_seconds_sum{exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator",} 0.073100047</span><br></pre>
+                <pre><span class="line"># HELP http_server_requests_seconds  </span><br><span class="line"># TYPE http_server_requests_seconds summary</span><br><span class="line">http_server_requests_seconds_count&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator/prometheus",&#125; 1.0</span><br><span class="line">http_server_requests_seconds_sum&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator/prometheus",&#125; 0.083506614</span><br><span class="line">http_server_requests_seconds_count&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/",&#125; 5.0</span><br><span class="line">http_server_requests_seconds_sum&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/",&#125; 0.094335788</span><br><span class="line">http_server_requests_seconds_count&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/**/favicon.ico",&#125; 4.0</span><br><span class="line">http_server_requests_seconds_sum&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/**/favicon.ico",&#125; 0.042993164</span><br><span class="line">http_server_requests_seconds_count&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator",&#125; 1.0</span><br><span class="line">http_server_requests_seconds_sum&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator",&#125; 0.073100047</span><br></pre>
               </td>
             </tr>
-          </tbody></table>
+          </table>
         </figure>
         <p>한 예로, http server의 RPS(Request per second)의 경우에 위와 같이 export를 해주는데, 보면 uri와 httpStatus, method 등을 나타내준다. 이를 시간별로 sum, count값을 보여주므로 그래프에 표현하게 되면 시간대별 HTTP 호출 그래프를 그릴 수 있다(Grafana)</p>
         <h2 id="Prometheus-Server에-메트릭-수집하기"><a href="#Prometheus-Server에-메트릭-수집하기" class="headerlink" title="Prometheus Server에 메트릭 수집하기"></a>Prometheus Server에 메트릭 수집하기</h2>
@@ -513,15 +516,15 @@
         <p>그리고 spring boot metric exporter를 사용하게 되면 scrape path가 달라져야 하는데, 기본으로는 host 주소를 적은 뒤 “/metrics”에서 긁어오지만 spring boot의 경우는 /actuator/prometheus에서 가져오기 때문에 아래와 같이 설정을 바꿔줘야 한다</p>
         <figure class="highlight yaml">
           <table>
-            <tbody><tr>
+            <tr>
               <td class="gutter">
                 <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre>
               </td>
               <td class="code">
-                <pre><span class="line"><span class="comment"># my global config</span></span><br><span class="line"><span class="attr">global:</span></span><br><span class="line"><span class="attr">  scrape_interval:</span>     <span class="number">1</span><span class="string">s</span> <span class="comment"># Set the scrape interval to every 15 seconds. Default is every 1 minute.</span></span><br><span class="line"><span class="attr">  evaluation_interval:</span> <span class="number">1</span><span class="string">s</span> <span class="comment"># Evaluate rules every 15 seconds. The default is every 1 minute.</span></span><br><span class="line">  <span class="comment"># scrape_timeout is set to the global default (10s).</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Alertmanager configuration</span></span><br><span class="line"><span class="attr">alerting:</span></span><br><span class="line"><span class="attr">  alertmanagers:</span></span><br><span class="line"><span class="attr">  - static_configs:</span></span><br><span class="line"><span class="attr">    - targets:</span></span><br><span class="line">      <span class="comment"># - alertmanager:9093</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Load rules once and periodically evaluate them according to the global 'evaluation_interval'.</span></span><br><span class="line"><span class="attr">rule_files:</span></span><br><span class="line">  <span class="comment"># - "first_rules.yml"</span></span><br><span class="line">  <span class="comment"># - "second_rules.yml"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># A scrape configuration containing exactly one endpoint to scrape:</span></span><br><span class="line"><span class="comment"># Here it's Prometheus itself.</span></span><br><span class="line"><span class="attr">scrape_configs:</span></span><br><span class="line">  <span class="comment"># The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.</span></span><br><span class="line"><span class="attr">  - job_name:</span> <span class="string">'prometeus-sample-server'</span></span><br><span class="line">    <span class="comment"># metrics_path defaults to '/metrics'</span></span><br><span class="line">    <span class="comment"># scheme defaults to 'http'.</span></span><br><span class="line"><span class="attr">    metrics_path:</span> <span class="string">'/actuator/prometheus'</span></span><br><span class="line"><span class="attr">    static_configs:</span></span><br><span class="line"><span class="attr">            - targets:</span> <span class="string">['192.168.0.3:8080']</span></span><br></pre>
+                <pre><span class="line"><span class="comment"># my global config</span></span><br><span class="line"><span class="attr">global:</span></span><br><span class="line"><span class="attr">  scrape_interval:</span>     <span class="number">1</span><span class="string">s</span> <span class="comment"># Set the scrape interval to every 15 seconds. Default is every 1 minute.</span></span><br><span class="line"><span class="attr">  evaluation_interval:</span> <span class="number">1</span><span class="string">s</span> <span class="comment"># Evaluate rules every 15 seconds. The default is every 1 minute.</span></span><br><span class="line">  <span class="comment"># scrape_timeout is set to the global default (10s).</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Alertmanager configuration</span></span><br><span class="line"><span class="attr">alerting:</span></span><br><span class="line"><span class="attr">  alertmanagers:</span></span><br><span class="line"><span class="attr">  - static_configs:</span></span><br><span class="line"><span class="attr">    - targets:</span></span><br><span class="line">      <span class="comment"># - alertmanager:9093</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Load rules once and periodically evaluate them according to the global 'evaluation_interval'.</span></span><br><span class="line"><span class="attr">rule_files:</span></span><br><span class="line">  <span class="comment"># - "first_rules.yml"</span></span><br><span class="line">  <span class="comment"># - "second_rules.yml"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># A scrape configuration containing exactly one endpoint to scrape:</span></span><br><span class="line"><span class="comment"># Here it's Prometheus itself.</span></span><br><span class="line"><span class="attr">scrape_configs:</span></span><br><span class="line">  <span class="comment"># The job name is added as a label `job=&lt;job_name&gt;` to any timeseries scraped from this config.</span></span><br><span class="line"><span class="attr">  - job_name:</span> <span class="string">'prometeus-sample-server'</span></span><br><span class="line">    <span class="comment"># metrics_path defaults to '/metrics'</span></span><br><span class="line">    <span class="comment"># scheme defaults to 'http'.</span></span><br><span class="line"><span class="attr">    metrics_path:</span> <span class="string">'/actuator/prometheus'</span></span><br><span class="line"><span class="attr">    static_configs:</span></span><br><span class="line"><span class="attr">            - targets:</span> <span class="string">['192.168.0.3:8080']</span></span><br></pre>
               </td>
             </tr>
-          </tbody></table>
+          </table>
         </figure>
         <p>보면 scrape_configs에 metrics_path가 설정되었는데, 기본으로는 metrics지만 이를 actuator/prometheus로 변경해주는 부분이다. 이렇게 설정하고 잘 실행이 되면 prometheus dashboard를 가서 확인해보자</p>
         <p><img src="/images/prom2.png" alt="img"> </p>
@@ -642,7 +645,7 @@
 
     <footer id="footer">
       <div class="footer-left">
-        Copyright © 2019 Gompangs(<a href="mailto:stacks5978@gmail.com" class="auto-link auto-link-email" target="_blank" rel="external nofollow noopener noreferrer">stacks5978@gmail.com</a>)
+        Copyright &copy; 2019 Gompangs(<a href="mailto:stacks5978@gmail.com" class="auto-link auto-link-email" target="_blank" rel="external nofollow noopener noreferrer">stacks5978@gmail.com</a>)
       </div>
       <div class="footer-right">
         <nav>
@@ -663,10 +666,10 @@
       </div>
     </footer>
   </div>
+</body>
 
-
-
-
+</html>
+<!-- styles -->
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 <link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
 <!-- jquery -->
@@ -688,11 +691,11 @@
     a.async = 1;
     a.src = g;
     m.parentNode.insertBefore(a, m)
-  })(window, document, 'script', '<a href="//www.google-analytics.com/analytics.js'
+  })(window, document, 'script', '<a href="//www.google-analytics.com/analytics.js', 'ga'
     " class="
     auto - link auto - link - url " target="
     _blank " rel="
-    noopener noreferrer ">www.google-analytics.com/analytics.js'</a>, 'ga');
+    noopener noreferrer ">www.google-analytics.com/analytics.js','ga'</a>);
     ga('create', 'UA-68696489-4', 'auto'); ga('send', 'pageview');
 </script>
 
@@ -714,4 +717,4 @@
     noopener noreferrer ">.disqus.com/embed.js'</a>;
       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   }());
-</script><script type="text/javascript" charset="utf-8" src="/js/lazyload-plugin/lazyload.intersectionObserver.min.js"></script></body></html><!-- styles -->
+</script>
