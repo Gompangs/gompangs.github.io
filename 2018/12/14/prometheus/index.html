@@ -42,7 +42,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/agate.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/googlecode.css">
 
 
     
@@ -219,7 +219,7 @@
 <p>다운로드는 <a href="https://prometheus.io/download/#prometheus" rel="external nofollow noopener noreferrer" target="_blank">https://prometheus.io/download/#prometheus</a> 에서 할 수 있다</p>
 <p>prometheus 서버 말고도 각종 exporter가 있다(node js, alertmanager 등).. 여기서는 prometheus server만 받아서 맞는 운영체제 버전으로 받자</p>
 <p>본인은 odroid의 armv7을 사용하고 있어서 해당 바이너리로 받게 되었고,</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget <a href="https://github.com/prometheus/prometheus/releases/download/v2.5.0/prometheus-2.5.0.linux-armv7.tar.gz" class="auto-link auto-link-url" target="_blank" rel="external nofollow noopener noreferrer">https://github.com/prometheus/prometheus/releases/download/v2.5.0/prometheus-2.5.0.linux-armv7.tar.gz</a></span><br><span class="line">tar xvfz prometheus-2.5.0.linux-armv7.tar.gz</span><br><span class="line">cd prometheus-2.5.0.linux-armv7</span><br><span class="line">./prometheus</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/prometheus/prometheus/releases/download/v2.5.0/prometheus-2.5.0.linux-armv7.tar.gz</span><br><span class="line">tar xvfz prometheus-2.5.0.linux-armv7.tar.gz</span><br><span class="line">cd prometheus-2.5.0.linux-armv7</span><br><span class="line">./prometheus</span><br></pre></td></tr></table></figure>
 <p>로 바로 실행을 할 수 있다. 다만 지금은 서버가 뜨긴 하지만 아무런 메트릭을 수집하지 않고있다. 이는 prometheus.yml에서 scape를 할 target을 지정하지 않았기 때문이다. 지금은 단순히 9090포트로 접근을 해보면 Prometheus의 대시보드를 볼 수 있을것이다</p>
 <p><img src="https://www.joyfulbikeshedding.com/images/2018/prometheus-42e58d9a.png" alt="img"></p>
 <p>대시보드에서 무언가를 보기 위해서는 일단 prometheus.yml 의 내용을 보도록 하자</p>
@@ -252,7 +252,7 @@
 <p>참고. Spring boot용 client는 actuator를 활용해서 구현이 되어 있다(<a href="https://www.callicoder.com/spring-boot-actuator-metrics-monitoring-dashboard-prometheus-grafana/" rel="external nofollow noopener noreferrer" target="_blank">https://www.callicoder.com/spring-boot-actuator-metrics-monitoring-dashboard-prometheus-grafana/</a>) 를 참고하면 연동방법에 대해 나와 있다.</p>
 <figure class="highlight xml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">&lt;!-- The client --&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.prometheus<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>simpleclient<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>0.6.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></span><br><span class="line"><span class="hljs-comment">&lt;!-- Hotspot JVM metrics--&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.prometheus<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>simpleclient_hotspot<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>0.6.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></span><br><span class="line"><span class="hljs-comment">&lt;!-- Exposition HTTPServer--&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.prometheus<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>simpleclient_httpserver<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>0.6.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>dependency를 추가하고, spring boot dependency를 추가하고나서 Java bean config쪽을 구성해보자</p>
-<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Configuration</span></span><br><span class="line"><span class="hljs-meta">@Slf</span>4j</span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PrometheusConfig</span> </span>&#123;</span><br><span class="line">    <span class="hljs-meta">@PostConstruct</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">init</span><span class="hljs-params">()</span></span>&#123;</span><br><span class="line">        DefaultExports.initialize(); <span class="hljs-comment">// Export JVM Metrics into http endpoint</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-meta">@Bean</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> HTTPServer <span class="hljs-title">prometheusServer</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <a href="http://log.info" class="auto-link auto-link-url" target="_blank" rel="external nofollow noopener noreferrer">log.info</a>(<span class="hljs-string">"promethues server has started"</span>);</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> HTTPServer(<span class="hljs-number">9090</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Configuration</span></span><br><span class="line"><span class="hljs-meta">@Slf</span>4j</span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PrometheusConfig</span> </span>&#123;</span><br><span class="line">    <span class="hljs-meta">@PostConstruct</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">init</span><span class="hljs-params">()</span></span>&#123;</span><br><span class="line">        DefaultExports.initialize(); <span class="hljs-comment">// Export JVM Metrics into http endpoint</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-meta">@Bean</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> HTTPServer <span class="hljs-title">prometheusServer</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        log.info(<span class="hljs-string">"promethues server has started"</span>);</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> HTTPServer(<span class="hljs-number">9090</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>보면 그냥 configuration 클래스가 로딩될 때, DefaultExports로 initialize를 해주고, prometheus 서버를 띄워주는 역할만 하고 있다.</p>
 <p>이렇게 구성해서 띄워보면, 실제로 9090포트로 prometheus metric exporter가 구동이 되게 된다. 접근해보면 아래와 같은 페이지가 나오게 된다</p>
 <figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"># HELP jvm_memory_bytes_used Used bytes of a given JVM memory area.</span><br><span class="line"># TYPE jvm_memory_bytes_used gauge</span><br><span class="line">jvm_memory_bytes_used&#123;area="heap",&#125; 8.0815512E7</span><br><span class="line">jvm_memory_bytes_used&#123;area="nonheap",&#125; 4.3263472E7</span><br><span class="line"># HELP jvm_memory_bytes_committed Committed (bytes) of a given JVM memory area.</span><br><span class="line"># TYPE jvm_memory_bytes_committed gauge</span><br><span class="line">jvm_memory_bytes_committed&#123;area="heap",&#125; 1.6777216E8</span><br><span class="line">jvm_memory_bytes_committed&#123;area="nonheap",&#125; 4.5481984E7</span><br><span class="line"># HELP jvm_memory_bytes_max Max (bytes) of a given JVM memory area.</span><br><span class="line"># TYPE jvm_memory_bytes_max gauge</span><br><span class="line">jvm_memory_bytes_max&#123;area="heap",&#125; 1.908932608E9</span><br><span class="line">jvm_memory_bytes_max&#123;area="nonheap",&#125; -1.0</span><br><span class="line"># HELP jvm_memory_bytes_init Initial bytes of a given JVM memory area.</span><br><span class="line"># TYPE jvm_memory_bytes_init gauge</span><br><span class="line">jvm_memory_bytes_init&#123;area="heap",&#125; 1.34217728E8</span><br><span class="line">jvm_memory_bytes_init&#123;area="nonheap",&#125; 2555904.0</span><br><span class="line"># HELP jvm_memory_pool_bytes_used Used bytes of a given JVM memory pool.</span><br><span class="line"># TYPE jvm_memory_pool_bytes_used gauge</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="Code Cache",&#125; 7142976.0</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="Metaspace",&#125; 3.1820632E7</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="Compressed Class Space",&#125; 4299864.0</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="PS Eden Space",&#125; 5.7521336E7</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="PS Survivor Space",&#125; 8909040.0</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="PS Old Gen",&#125; 1.4385136E7</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
@@ -282,19 +282,19 @@
 <li>특정 기간동안의 집계나 API 콜 수 등을 보고싶을때</li>
 </ul>
 <h4 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h4><p>히스토그램과 비슷하지만, φ-quantiles을 지원한다는 점이 차이점이고 슬라이딩 시간단위의 윈도우를 계산할때 사용한다(이건 사실 무슨 소리인지 잘 모르겠다 언제 써야할지..)</p>
-<h3 id="Gauge-사용해보기"><a href="#Gauge-사용해보기" class="headerlink" title="Gauge 사용해보기"></a>Gauge 사용해보기</h3><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@RestController</span></span><br><span class="line"><span class="hljs-meta">@Slf</span>4j</span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SampleController</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">private</span> Gauge sampleGauge;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-meta">@PostConstruct</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">init</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">        sampleGauge = <a href="http://Gauge.build" class="auto-link auto-link-url" target="_blank" rel="external nofollow noopener noreferrer">Gauge.build</a>(<span class="hljs-string">"sample"</span>, <span class="hljs-string">"sample metrics"</span>).register();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-meta">@GetMapping</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">sample</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">        sampleGauge.inc();</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-string">"sample"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Gauge-사용해보기"><a href="#Gauge-사용해보기" class="headerlink" title="Gauge 사용해보기"></a>Gauge 사용해보기</h3><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@RestController</span></span><br><span class="line"><span class="hljs-meta">@Slf</span>4j</span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SampleController</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">private</span> Gauge sampleGauge;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-meta">@PostConstruct</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">init</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">        sampleGauge = Gauge.build(<span class="hljs-string">"sample"</span>, <span class="hljs-string">"sample metrics"</span>).register();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-meta">@GetMapping</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">sample</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">        sampleGauge.inc();</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-string">"sample"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>Gauge를 사용해봤는데, 위와 같이 사용을 하면 된다. Gauge의 build를 통해서 메트릭의 이름을 지정해주고 이를 register(); 해주면 해당 메트릭이 등록이 되게 된다.</p>
 <p>그리고 sample을 호출할때마다 sampleGauge의 값이 inc가 된다.</p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># HELP sample sample metrics</span><br><span class="line"># TYPE sample gauge</span><br><span class="line">sample 0.0</span><br></pre></td></tr></table></figure>
 <p>처음에 spring boot를 띄우게 되면 9090포트로 위와같은 메트릭이 export가 되게 되는데, localhost:8080으로 sample을 호출을 하게 되면 위의 sample값이 1.0 , 2.0 … 와 같이 변하게 된다.</p>
-<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><a href="http://Counter.build" class="auto-link auto-link-url" target="_blank" rel="external nofollow noopener noreferrer">Counter.build</a>(<span class="hljs-string">"someCounter"</span>, <span class="hljs-string">"Some counter"</span>).register();</span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Counter.build(<span class="hljs-string">"someCounter"</span>, <span class="hljs-string">"Some counter"</span>).register();</span><br></pre></td></tr></table></figure>
 <p>Counter의 경우에도 위와같이 build -&gt; register를 하게 되면 metric에 등록이 되게 된다.</p>
 <p>간단한 gauge랑 counter의 경우는 위와같이 쓰면 되지만 실제로 많이 사용하게 될 메트릭들은 대부분 histogram과 summary일텐데 이건 공부가 좀더 필요해보인다. spring boot prometheus client(micrometer)를 기본으로 export하면 대부분 summary를 많이 사용하는 걸로 보인다(histogram은 안쓰고 summary만 씀)</p>
 <h3 id="Spring-boot-exporter"><a href="#Spring-boot-exporter" class="headerlink" title="Spring boot exporter"></a>Spring boot exporter</h3><p>custom하게 metric을 export하는건 위에서 아주 살짝 맛만 봤는데, 실제로 잘 구현된 metric은 어떻게 구성되는지를 한번 알아보자. spring boot의 경우 actuator를 사용하면 별도의 설정없이 tomcat, jvm, spring에 관련된 정보를 export할 수 있다. (<a href="https://dzone.com/articles/monitoring-using-spring-boot-2-prometheus-and-graf" rel="external nofollow noopener noreferrer" target="_blank">https://dzone.com/articles/monitoring-using-spring-boot-2-prometheus-and-graf</a>)</p>
 <figure class="highlight xml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">&lt;!-- Spring boot actuator to expose metrics endpoint --&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></span><br><span class="line"><span class="hljs-comment">&lt;!-- Micormeter core dependecy  --&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.micrometer<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>micrometer-core<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></span><br><span class="line"><span class="hljs-comment">&lt;!-- Micrometer Prometheus registry  --&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.micrometer<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>micrometer-registry-prometheus<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>pom.xml에 위의 dependency를 import하고</p>
 <figure class="highlight yaml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="hljs-comment">#Metrics related configurations</span></span><br><span class="line"><span class="hljs-string">management.endpoint.metrics.enabled=true</span></span><br><span class="line"><span class="hljs-string">management.endpoints.web.exposure.include=*</span></span><br><span class="line"><span class="hljs-string">management.endpoint.prometheus.enabled=true</span></span><br><span class="line"><span class="hljs-string">management.metrics.export.prometheus.enabled=true</span></span><br></pre></td></tr></table></figure>
-<p><a href="http://application.properties" class="auto-link auto-link-url" target="_blank" rel="external nofollow noopener noreferrer">application.properties</a>에 위와 같은 config를 넣어주게 되면 localhost:8080/actuator/prometheus로 metric이 export되게 된다</p>
+<p>application.properties에 위와 같은 config를 넣어주게 되면 localhost:8080/actuator/prometheus로 metric이 export되게 된다</p>
 <p>그리고 grafana에서 보여지게 될 tag를 붙여줘야 한다</p>
 <p>@Configuration 클래스를 하나 만들어서 아래의 bean을 등록해주자</p>
 <figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Configuration</span></span><br><span class="line"><span class="hljs-meta">@Slf</span>4j</span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PrometheusCustomConfig</span> </span>&#123;</span><br><span class="line">    <span class="hljs-meta">@Bean</span></span><br><span class="line">    <span class="hljs-function">MeterRegistryCustomizer&lt;MeterRegistry&gt; <span class="hljs-title">metricsCommonTags</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> registry -&gt; registry.config().commonTags(<span class="hljs-string">"application"</span>, <span class="hljs-string">"PROMETHEUS-SAMPLE-SERVER"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -341,7 +341,7 @@
 
 <div class="card">
     <div class="card-content">
-        <h3 class="menu-label has-text-centered">Suka dengan artikel ini? Bantu penulis dengan donasi melalui</h3>
+        <h3 class="menu-label has-text-centered">Like this article? Support the author with</h3>
         <div class="buttons is-centered">
             
         </div>
@@ -352,6 +352,13 @@
 
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/02/17/java/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">java highlight test</span>
+            </a>
+        </div>
         
         
         <div class="level-end">
@@ -368,7 +375,7 @@
 
 <div class="card">
     <div class="card-content">
-        <h3 class="title is-5 has-text-weight-normal">Commentaires</h3>
+        <h3 class="title is-5 has-text-weight-normal">Comments</h3>
         
 <script>
     var disqus_config = function () {
@@ -429,17 +436,17 @@
             <div class="level-item has-text-centered is-marginless">
                 <div>
                     <p class="heading">
-                        Articles
+                        Posts
                     </p>
                     <p class="title has-text-weight-normal">
-                        2
+                        3
                     </p>
                 </div>
             </div>
             <div class="level-item has-text-centered is-marginless">
                 <div>
                     <p class="heading">
-                        Catégories
+                        Categories
                     </p>
                     <p class="title has-text-weight-normal">
                         2
@@ -459,7 +466,7 @@
         </nav>
         <div class="level">
             <a class="level-item button is-link is-rounded" href="http://github.com/Gompangs" rel="external nofollow noopener noreferrer" target="_blank">
-                SUIVRE</a>
+                Follow</a>
         </div>
         
         
@@ -490,7 +497,7 @@
     <div class="card-content">
         <div class="menu">
         <h3 class="menu-label">
-            Liens
+            Links
         </h3>
         <ul class="menu-list">
         
@@ -528,7 +535,7 @@
     <div class="card-content">
         <div class="menu">
             <h3 class="menu-label">
-                Catégories
+                Categories
             </h3>
             <ul class="menu-list">
             <li>
@@ -557,7 +564,7 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            Nuage de tags
+            Tag Cloud
         </h3>
         <a href="/tags/Javascript/" style="font-size: 10px;">Javascript</a> <a href="/tags/Promise/" style="font-size: 10px;">Promise</a> <a href="/tags/grafana/" style="font-size: 10px;">grafana</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/monitoring/" style="font-size: 10px;">monitoring</a> <a href="/tags/prometheus/" style="font-size: 10px;">prometheus</a> <a href="/tags/prometheus-java-client/" style="font-size: 10px;">prometheus java client</a> <a href="/tags/모니터링/" style="font-size: 10px;">모니터링</a>
     </div>
@@ -571,8 +578,27 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            Récents
+            Recent
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/02/17/java/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="java highlight test">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-02-17T12:47:07.000Z">2019-02-17</time></div>
+                    <a href="/2019/02/17/java/" class="has-link-black-ter is-size-6">java highlight test</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -623,6 +649,17 @@
             Archives
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/02/">
+                <span class="level-start">
+                    <span class="level-item">February 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2018/12/">
@@ -735,8 +772,27 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            Récents
+            Recent
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/02/17/java/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="java highlight test">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-02-17T12:47:07.000Z">2019-02-17</time></div>
+                    <a href="/2019/02/17/java/" class="has-link-black-ter is-size-6">java highlight test</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -787,6 +843,17 @@
             Archives
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/02/">
+                <span class="level-start">
+                    <span class="level-item">February 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2018/12/">
@@ -1004,7 +1071,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     
 
-<a id="back-to-top" title="Kembali ke atas" href="javascript:;">
+<a id="back-to-top" title="Back to Top" href="javascript:;">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>
@@ -1050,9 +1117,9 @@ document.addEventListener('DOMContentLoaded', function () {
     (function (window) {
         var INSIGHT_CONFIG = {
             TRANSLATION: {
-                POSTS: 'Articles',
+                POSTS: 'Posts',
                 PAGES: 'Pages',
-                CATEGORIES: 'Catégories',
+                CATEGORIES: 'Categories',
                 TAGS: 'Tags',
                 UNTITLED: '(Untitled)',
             },

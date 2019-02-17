@@ -2,23 +2,23 @@
 <html lang="KR">
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
-<title>search - 곰팡이 개발연구소</title>
+<title>java highlight test - 곰팡이 개발연구소</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-    <meta name="description" content="Gompang&apos;s Blog(JAVA Rest API Developer)">
+    <meta name="description" content="1234567IntStream.range(1, 4)    .mapToObj(i -&amp;gt; new Foo(&quot;Foo&quot; + i))    .peek(f -&amp;gt; IntStream.range(1, 4)        .mapToObj(i -&amp;gt; new Bar(&quot;Bar&quot; + i + &quot; &amp;lt;- &quot; f.name))        .forEach(f.bars::add">
 <meta name="keywords" content="Development,Java,Microservice Architecture">
-<meta property="og:type" content="website">
-<meta property="og:title" content="search">
-<meta property="og:url" content="https://gompangs.github.io/search/index.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java highlight test">
+<meta property="og:url" content="https://gompangs.github.io/2019/02/17/java/index.html">
 <meta property="og:site_name" content="곰팡이 개발연구소">
-<meta property="og:description" content="Gompang&apos;s Blog(JAVA Rest API Developer)">
+<meta property="og:description" content="1234567IntStream.range(1, 4)    .mapToObj(i -&amp;gt; new Foo(&quot;Foo&quot; + i))    .peek(f -&amp;gt; IntStream.range(1, 4)        .mapToObj(i -&amp;gt; new Bar(&quot;Bar&quot; + i + &quot; &amp;lt;- &quot; f.name))        .forEach(f.bars::add">
 <meta property="og:locale" content="KR">
-<meta property="og:updated_time" content="2018-12-13T15:44:24.704Z">
+<meta property="og:updated_time" content="2019-02-17T12:49:11.766Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="search">
-<meta name="twitter:description" content="Gompang&apos;s Blog(JAVA Rest API Developer)">
+<meta name="twitter:title" content="java highlight test">
+<meta name="twitter:description" content="1234567IntStream.range(1, 4)    .mapToObj(i -&amp;gt; new Foo(&quot;Foo&quot; + i))    .peek(f -&amp;gt; IntStream.range(1, 4)        .mapToObj(i -&amp;gt; new Bar(&quot;Bar&quot; + i + &quot; &amp;lt;- &quot; f.name))        .forEach(f.bars::add">
 
 
 
@@ -95,7 +95,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="search" height="28">
+                <img src="/images/logo.svg" alt="java highlight test" height="28">
             
             </a>
         </div>
@@ -144,13 +144,31 @@
     
     <div class="card-content article ">
         
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-02-17T12:47:07.000Z">2019-02-17</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    a minute read (About 149 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                search
+                java highlight test
             
         </h1>
         <div class="content">
-            
+            <figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">IntStream.range(<span class="hljs-number">1</span>, <span class="hljs-number">4</span>)</span><br><span class="line">    .mapToObj(i -&gt; <span class="hljs-keyword">new</span> Foo(<span class="hljs-string">"Foo"</span> + i))</span><br><span class="line">    .peek(f -&gt; IntStream.range(<span class="hljs-number">1</span>, <span class="hljs-number">4</span>)</span><br><span class="line">        .mapToObj(i -&gt; <span class="hljs-keyword">new</span> Bar(<span class="hljs-string">"Bar"</span> + i + <span class="hljs-string">" &lt;- "</span> f.name))</span><br><span class="line">        .forEach(f.bars::add))</span><br><span class="line">    .flatMap(f -&gt; f.bars.stream())</span><br><span class="line">    .forEach(b -&gt; System.out.println(b.name));</span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Integer ageSum = persons</span><br><span class="line">    .stream()</span><br><span class="line">    .reduce(<span class="hljs-number">0</span>,</span><br><span class="line">        (sum, p) -&gt; &#123;</span><br><span class="line">            System.out.format(<span class="hljs-string">"accumulator: sum=%s; person=%s\n"</span>, sum, p);</span><br><span class="line">            <span class="hljs-keyword">return</span> sum += p.age;</span><br><span class="line">        &#125;,</span><br><span class="line">        (sum1, sum2) -&gt; &#123;</span><br><span class="line">            System.out.format(<span class="hljs-string">"combiner: sum1=%s; sum2=%s\n"</span>, sum1, sum2);</span><br><span class="line">            <span class="hljs-keyword">return</span> sum1 + sum2;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Arrays.asList(<span class="hljs-string">"a1"</span>, <span class="hljs-string">"a2"</span>, <span class="hljs-string">"b1"</span>, <span class="hljs-string">"c2"</span>, <span class="hljs-string">"c1"</span>)</span><br><span class="line">    .parallelStream()</span><br><span class="line">    .filter(s -&gt; &#123;</span><br><span class="line">        System.out.format(<span class="hljs-string">"filter: %s [%s]\n"</span>,</span><br><span class="line">            s, Thread.currentThread().getName());</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;</span><br><span class="line">    &#125;)</span><br><span class="line">    .map(s -&gt; &#123;</span><br><span class="line">        System.out.format(<span class="hljs-string">"map: %s [%s]\n"</span>,</span><br><span class="line">            s, Thread.currentThread().getName());</span><br><span class="line">        <span class="hljs-keyword">return</span> s.toUpperCase();</span><br><span class="line">    &#125;)</span><br><span class="line">    .sorted((s1, s2) -&gt; &#123;</span><br><span class="line">        System.out.format(<span class="hljs-string">"sort: %s &lt;&gt; %s [%s]\n"</span>,</span><br><span class="line">            s1, s2, Thread.currentThread().getName());</span><br><span class="line">        <span class="hljs-keyword">return</span> s1.compareTo(s2);</span><br><span class="line">    &#125;)</span><br><span class="line">    .forEach(s -&gt; System.out.format(<span class="hljs-string">"forEach: %s [%s]\n"</span>,</span><br><span class="line">        s, Thread.currentThread().getName()));</span><br></pre></td></tr></table></figure>
+
         </div>
         
         
@@ -171,6 +189,20 @@
 
 
 
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/12/14/prometheus/">
+                <span class="level-item">Prometheus 공부 및 Java client 연동</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
 
 
 <div class="card">
@@ -179,8 +211,8 @@
         
 <script>
     var disqus_config = function () {
-        this.page.url = 'https://gompangs.github.io/search/index.html';
-        this.page.identifier = 'search/index.html';
+        this.page.url = 'https://gompangs.github.io/2019/02/17/java/';
+        this.page.identifier = '2019/02/17/java/';
     };
     (function() {
         var d = document, s = d.createElement('script');  
@@ -763,7 +795,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="search" height="28">
+                    <img src="/images/logo.svg" alt="java highlight test" height="28">
                 
                 </a>
                 <p class="is-size-7">
