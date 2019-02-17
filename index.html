@@ -142,48 +142,11 @@
                 <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
     <div class="card">
     
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-02-17T12:47:07.000Z">2019-02-17</time>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    1분 read (About 149 words)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/02/17/java/">java highlight test</a>
-            
-        </h1>
-        <div class="content">
-            <figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">IntStream.range(<span class="hljs-number">1</span>, <span class="hljs-number">4</span>)</span><br><span class="line">    .mapToObj(i -&gt; <span class="hljs-keyword">new</span> Foo(<span class="hljs-string">"Foo"</span> + i))</span><br><span class="line">    .peek(f -&gt; IntStream.range(<span class="hljs-number">1</span>, <span class="hljs-number">4</span>)</span><br><span class="line">        .mapToObj(i -&gt; <span class="hljs-keyword">new</span> Bar(<span class="hljs-string">"Bar"</span> + i + <span class="hljs-string">" &lt;- "</span> f.name))</span><br><span class="line">        .forEach(f.bars::add))</span><br><span class="line">    .flatMap(f -&gt; f.bars.stream())</span><br><span class="line">    .forEach(b -&gt; System.out.println(b.name));</span><br></pre></td></tr></table></figure>
-<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Integer ageSum = persons</span><br><span class="line">    .stream()</span><br><span class="line">    .reduce(<span class="hljs-number">0</span>,</span><br><span class="line">        (sum, p) -&gt; &#123;</span><br><span class="line">            System.out.format(<span class="hljs-string">"accumulator: sum=%s; person=%s\n"</span>, sum, p);</span><br><span class="line">            <span class="hljs-keyword">return</span> sum += p.age;</span><br><span class="line">        &#125;,</span><br><span class="line">        (sum1, sum2) -&gt; &#123;</span><br><span class="line">            System.out.format(<span class="hljs-string">"combiner: sum1=%s; sum2=%s\n"</span>, sum1, sum2);</span><br><span class="line">            <span class="hljs-keyword">return</span> sum1 + sum2;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
-<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Arrays.asList(<span class="hljs-string">"a1"</span>, <span class="hljs-string">"a2"</span>, <span class="hljs-string">"b1"</span>, <span class="hljs-string">"c2"</span>, <span class="hljs-string">"c1"</span>)</span><br><span class="line">    .parallelStream()</span><br><span class="line">    .filter(s -&gt; &#123;</span><br><span class="line">        System.out.format(<span class="hljs-string">"filter: %s [%s]\n"</span>,</span><br><span class="line">            s, Thread.currentThread().getName());</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;</span><br><span class="line">    &#125;)</span><br><span class="line">    .map(s -&gt; &#123;</span><br><span class="line">        System.out.format(<span class="hljs-string">"map: %s [%s]\n"</span>,</span><br><span class="line">            s, Thread.currentThread().getName());</span><br><span class="line">        <span class="hljs-keyword">return</span> s.toUpperCase();</span><br><span class="line">    &#125;)</span><br><span class="line">    .sorted((s1, s2) -&gt; &#123;</span><br><span class="line">        System.out.format(<span class="hljs-string">"sort: %s &lt;&gt; %s [%s]\n"</span>,</span><br><span class="line">            s1, s2, Thread.currentThread().getName());</span><br><span class="line">        <span class="hljs-keyword">return</span> s1.compareTo(s2);</span><br><span class="line">    &#125;)</span><br><span class="line">    .forEach(s -&gt; System.out.format(<span class="hljs-string">"forEach: %s [%s]\n"</span>,</span><br><span class="line">        s, Thread.currentThread().getName()));</span><br></pre></td></tr></table></figure>
-
-        </div>
-        
-        
-        
+    <div class="card-image">
+        <a href="/2018/12/14/prometheus/" class="image is-7by1">
+            <img class="thumbnail" src="/images/prometheus/architecture.png" alt="Prometheus 공부 및 Java client 연동">
+        </a>
     </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
     
     <div class="card-content article ">
         
@@ -199,7 +162,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    40분 read (About 6074 words)
+                    40분 read (About 6067 words)
                 </span>
                 
                 
@@ -214,7 +177,7 @@
         <div class="content">
             <h2 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h2><p>Prometheus 는 오픈소스 모니터링 솔루션이다. (<a href="https://prometheus.io/" rel="external nofollow noopener noreferrer" target="_blank">https://prometheus.io/</a>)</p>
 <p>크게 Prometheus 서버와, 메트릭 정보를 export할 export node로 구성이 되어 있다</p>
-<p><img src="http://tech.cloudz-labs.io/posts/monitoring-in-kubernetes/monitoring-prometheus-01.png" alt=""></p>
+<p><img src="/images/prometheus/architecture2.png" alt="architecture"></p>
 <p>구조가 좀 일반적인 모니터링 시스템과는 다르다는걸 느낄수가 있는데, 원래는 대부분의 솔루션이 메트릭을 수집할 때 메트릭이 발생한 서버에서 중앙 서버로 데이터를 전송해주는 구조로(push) 되어 있지만, 프로메테우스 같은 경우는 신기하게도 중앙서버(prometheus server)에서 메트릭을 polling 해서 가져가도록 구성이 되어 있다.</p>
 <h3 id="장점"><a href="#장점" class="headerlink" title="장점"></a>장점</h3><p>이 솔루션을 쓰게 되면 얻을 수 있는 장점은, 아무래도 pull 방식의 구조를 채택함으로써 모든 메트릭에 대한 데이터를 중앙 서버로 보내지 않아도 된다는 점이다. 대부분의 모니터링 시스템 구조는 push방식으로 메트릭이 발생하면 해당 메트릭을 서버로 보내는 방식을 채택하고 있는데, 만약 부하가 높은 상황에서 그런 메트릭들을 수집하기 위해 전송하는 부분이 생긴다면? 부하와 더불어서 실제 어플리케이션에 문제를 유발할 수 있는 fail point가 생기는 것이다</p>
 <p>Prometheus의 특성 상, 모든 데이터를 수집하지 않고 일정 주기(default 15s)로 발생하는 메트릭을 수집하여 추이나 모니터링을 <strong>어플리케이션에 무리 없이</strong> 하기 때문에 이러한 부분에서 매력적인 솔루션이라고 말할 수 있다.</p>
@@ -366,61 +329,6 @@
 
 
 
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-11-18T06:02:00.000Z">2018-11-18</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Javascript/">Javascript</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    2분 read (About 254 words)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2018/11/18/Javascript/">Javascript Promise에 관하여</a>
-            
-        </h1>
-        <div class="content">
-            <h2 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h2><p>Javascript는 널리 알려진 것 처럼 비동기 함수 위주의 동작을 잘 구현한 언어이다.</p>
-<p>특히 NodeJS에 와서는 그 비동기 함수로 인한 장점을 많이 누릴 수 있게 된 것 같은데 아무래도 평소에 개발하는건 대부분 Java로 하기 때문에 Javascript를 개인적으로 공부해보고 무슨 장점이 있는지에 대해 알아보려고 한다.</p>
-<p>일단 Promise가 무엇인지부터 살펴보도록 하자</p>
-<blockquote>
-<p>The <strong>Promise</strong> object represents the eventual completion (or failure) of an asynchronous operation, and its resulting value.</p>
-<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" rel="external nofollow noopener noreferrer" target="_blank">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise</a></p>
-</blockquote>
-<p>설명에 따르면 Promise는 비동기 함수의 동작이나 return value의 실패/성공을 받아서 궁극적인 완성을 시키기 위함 이라고 한다.</p>
-<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>( <span class="hljs-comment">/* executor */</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">resolve, reject</span>) </span>&#123; ... &#125; );</span><br></pre></td></tr></table></figure>
-<p>Promise는 위와 같이 resolve와 reject라는 parameter를 가지고 있다.</p>
-<p><img src="https://gompangs.github.io/images/promise-resolve-reject.png" alt=""></p>
-<h2 id="Promise를-사용-안할-때"><a href="#Promise를-사용-안할-때" class="headerlink" title="Promise를 사용 안할 때"></a>Promise를 사용 안할 때</h2><h2 id="Promise를-사용할-때"><a href="#Promise를-사용할-때" class="headerlink" title="Promise를 사용할 때"></a>Promise를 사용할 때</h2>
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
 </div>
                 
 
@@ -466,7 +374,7 @@
                         포스트
                     </p>
                     <p class="title has-text-weight-normal">
-                        3
+                        1
                     </p>
                 </div>
             </div>
@@ -476,7 +384,7 @@
                         카테고리
                     </p>
                     <p class="title has-text-weight-normal">
-                        2
+                        1
                     </p>
                 </div>
             </div>
@@ -486,7 +394,7 @@
                         태그
                     </p>
                     <p class="title has-text-weight-normal">
-                        8
+                        6
                     </p>
                 </div>
             </div>
@@ -579,14 +487,6 @@
             <span class="level-end">
                 <span class="level-item tag">1</span>
             </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/Javascript/">
-            <span class="level-start">
-                <span class="level-item">Javascript</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
-            </span>
         </a></li>
             </ul>
         </div>
@@ -605,28 +505,9 @@
         
         <article class="media">
             
-            <a href="/2019/02/17/java/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="java highlight test">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-02-17T12:47:07.000Z">2019-02-17</time></div>
-                    <a href="/2019/02/17/java/" class="has-link-black-ter is-size-6">java highlight test</a>
-                    <p class="is-size-7 is-uppercase">
-                        
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
             <a href="/2018/12/14/prometheus/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Prometheus 공부 및 Java client 연동">
+                    <img class="thumbnail" src="/images/prometheus/architecture.png" alt="Prometheus 공부 및 Java client 연동">
                 </p>
             </a>
             
@@ -636,25 +517,6 @@
                     <a href="/2018/12/14/prometheus/" class="has-link-black-ter is-size-6">Prometheus 공부 및 Java client 연동</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/JAVA/">JAVA</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2018/11/18/Javascript/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Javascript Promise에 관하여">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-18T06:02:00.000Z">2018-11-18</time></div>
-                    <a href="/2018/11/18/Javascript/" class="has-link-black-ter is-size-6">Javascript Promise에 관하여</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Javascript/">Javascript</a>
                     </p>
                 </div>
             </div>
@@ -673,31 +535,9 @@
         <ul class="menu-list">
         
         <li>
-            <a class="level is-marginless" href="/archives/2019/02/">
-                <span class="level-start">
-                    <span class="level-item">2월 2019</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
             <a class="level is-marginless" href="/archives/2018/12/">
                 <span class="level-start">
                     <span class="level-item">12월 2018</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2018/11/">
-                <span class="level-start">
-                    <span class="level-item">11월 2018</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -717,20 +557,6 @@
                 태그
             </h3>
             <div class="field is-grouped is-grouped-multiline">
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/Javascript/">
-                        <span class="tag">Javascript</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/Promise/">
-                        <span class="tag">Promise</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/grafana/">
@@ -799,28 +625,9 @@
         
         <article class="media">
             
-            <a href="/2019/02/17/java/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="java highlight test">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-02-17T12:47:07.000Z">2019-02-17</time></div>
-                    <a href="/2019/02/17/java/" class="has-link-black-ter is-size-6">java highlight test</a>
-                    <p class="is-size-7 is-uppercase">
-                        
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
             <a href="/2018/12/14/prometheus/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Prometheus 공부 및 Java client 연동">
+                    <img class="thumbnail" src="/images/prometheus/architecture.png" alt="Prometheus 공부 및 Java client 연동">
                 </p>
             </a>
             
@@ -830,25 +637,6 @@
                     <a href="/2018/12/14/prometheus/" class="has-link-black-ter is-size-6">Prometheus 공부 및 Java client 연동</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/JAVA/">JAVA</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2018/11/18/Javascript/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Javascript Promise에 관하여">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-18T06:02:00.000Z">2018-11-18</time></div>
-                    <a href="/2018/11/18/Javascript/" class="has-link-black-ter is-size-6">Javascript Promise에 관하여</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Javascript/">Javascript</a>
                     </p>
                 </div>
             </div>
@@ -867,31 +655,9 @@
         <ul class="menu-list">
         
         <li>
-            <a class="level is-marginless" href="/archives/2019/02/">
-                <span class="level-start">
-                    <span class="level-item">2월 2019</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
             <a class="level is-marginless" href="/archives/2018/12/">
                 <span class="level-start">
                     <span class="level-item">12월 2018</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2018/11/">
-                <span class="level-start">
-                    <span class="level-item">11월 2018</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -911,20 +677,6 @@
                 태그
             </h3>
             <div class="field is-grouped is-grouped-multiline">
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/Javascript/">
-                        <span class="tag">Javascript</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/Promise/">
-                        <span class="tag">Promise</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/grafana/">
