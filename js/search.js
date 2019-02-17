@@ -42,9 +42,9 @@ var searchFunc = function(path, searchId, contentId) {
     var i, j, result = [];
 
     for (i = 0; i < keywords.length; i++) {
-        for (j = i + 1; j < keywords.length + 1; j++) {
-            result.push(keywords.slice(i, j).join(" "));
-        }
+      for (j = i + 1; j < keywords.length + 1; j++) {
+        result.push(keywords.slice(i, j).join(" "));
+      }
     }
     return result;
   }
@@ -63,13 +63,17 @@ var searchFunc = function(path, searchId, contentId) {
       }).get();
 
       var $input = document.getElementById(searchId);
-      if (!$input) { return; }
+      if (!$input) {
+        return;
+      }
       var $resultContent = document.getElementById(contentId);
 
-      $input.addEventListener("input", function(){
+      $input.addEventListener("input", function() {
         var resultList = [];
         var keywords = getAllCombinations(this.value.trim().toLowerCase().split(" "))
-          .sort(function(a,b) { return b.split(" ").length - a.split(" ").length; });
+          .sort(function(a, b) {
+            return b.split(" ").length - a.split(" ").length;
+          });
         $resultContent.innerHTML = "";
         if (this.value.trim().length <= 0) {
           return;
@@ -92,7 +96,7 @@ var searchFunc = function(path, searchId, contentId) {
               indexTitle = dataTitle.indexOf(keyword);
               indexContent = dataContent.indexOf(keyword);
 
-              if( indexTitle >= 0 || indexContent >= 0 ){
+              if (indexTitle >= 0 || indexContent >= 0) {
                 matches += 1;
                 if (indexContent < 0) {
                   indexContent = 0;
@@ -107,21 +111,21 @@ var searchFunc = function(path, searchId, contentId) {
           if (matches > 0) {
             var searchResult = {};
             searchResult.rank = matches;
-            searchResult.str = "<li><a href='"+ dataUrl +"' class='search-result-title'>"+ dataTitle +"</a>";
+            searchResult.str = "<li><a href='" + dataUrl + "' class='search-result-title'>" + dataTitle + "</a>";
             if (firstOccur >= 0) {
               // cut out 100 characters
               var start = firstOccur - 20;
               var end = firstOccur + 80;
 
-              if(start < 0){
+              if (start < 0) {
                 start = 0;
               }
 
-              if(start == 0){
+              if (start == 0) {
                 end = 100;
               }
 
-              if(end > dataContent.length){
+              if (end > dataContent.length) {
                 end = dataContent.length;
               }
 
@@ -130,19 +134,19 @@ var searchFunc = function(path, searchId, contentId) {
               // highlight all keywords
               var regS = new RegExp(keywords.join("|"), "gi");
               matchContent = matchContent.replace(regS, function(keyword) {
-                return "<em class=\"search-keyword\">"+keyword+"</em>";
+                return "<em class=\"search-keyword\">" + keyword + "</em>";
               });
 
-              searchResult.str += "<p class=\"search-result\">" + matchContent +"...</p>";
+              searchResult.str += "<p class=\"search-result\">" + matchContent + "...</p>";
             }
             searchResult.str += "</li>";
             resultList.push(searchResult);
           }
         });
         resultList.sort(function(a, b) {
-            return b.rank - a.rank;
+          return b.rank - a.rank;
         });
-        var result ="<ul class=\"search-result-list\">";
+        var result = "<ul class=\"search-result-list\">";
         for (var i = 0; i < resultList.length; i++) {
           result += resultList[i].str;
         }

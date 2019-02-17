@@ -10,13 +10,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="naver-site-verification" content="a0c50affc8bad9ac44aa09a0a50cdf385f6b713b">
   <meta name="google-site-verification" content="A_AjfiLsebz96jIJXxR_q808dZ2PZCzOym2y3VvJkIQ">
-  <meta name="description" content="개요Prometheus 는 오픈소스 모니터링 솔루션이다. (https://prometheus.io/) 크게 Prometheus 서버와, 메트릭 정보를 export할 export node로 구성이 되어 있다  구조가 좀 일반적인 모니터링 시스템과는 다르다는걸 느낄수가 있는데, 원래는 대부분의 솔루션이 메트릭을 수집할 때 메트릭이 발생한 서버에서 중앙 서버로">
+  <meta name="description" content="개요 Prometheus 는 오픈소스 모니터링 솔루션이다. (https://prometheus.io/) 크게 Prometheus 서버와, 메트릭 정보를 export할 export node로 구성이 되어 있다  구조가 좀 일반적인 모니터링 시스템과는 다르다는걸 느낄수가 있는데, 원래는 대부분의 솔루션이 메트릭을 수집할 때 메트릭이 발생한 서버에서 중앙 서버로">
   <meta name="keywords" content="prometheus, java, client, 프로메테우스, grafana, monitoring">
   <meta property="og:type" content="article">
   <meta property="og:title" content="Prometheus 공부 및 Java client 연동">
   <meta property="og:url" content="https://gompangs.github.io/2018/12/14/prometheus/index.html">
   <meta property="og:site_name" content="곰팡이 개발연구소">
-  <meta property="og:description" content="개요Prometheus 는 오픈소스 모니터링 솔루션이다. (https://prometheus.io/) 크게 Prometheus 서버와, 메트릭 정보를 export할 export node로 구성이 되어 있다  구조가 좀 일반적인 모니터링 시스템과는 다르다는걸 느낄수가 있는데, 원래는 대부분의 솔루션이 메트릭을 수집할 때 메트릭이 발생한 서버에서 중앙 서버로">
+  <meta property="og:description" content="개요 Prometheus 는 오픈소스 모니터링 솔루션이다. (https://prometheus.io/) 크게 Prometheus 서버와, 메트릭 정보를 export할 export node로 구성이 되어 있다  구조가 좀 일반적인 모니터링 시스템과는 다르다는걸 느낄수가 있는데, 원래는 대부분의 솔루션이 메트릭을 수집할 때 메트릭이 발생한 서버에서 중앙 서버로">
   <meta property="og:locale" content="KR">
   <meta property="og:image" content="http://tech.cloudz-labs.io/posts/monitoring-in-kubernetes/monitoring-prometheus-01.png">
   <meta property="og:image" content="https://image.slidesharecdn.com/copyofprometheusstorage1-160127133731/95/prometheus-storage-9-638.jpg?cb=1453901940">
@@ -32,7 +32,7 @@
   <meta property="og:updated_time" content="2019-02-13T12:20:29.137Z">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Prometheus 공부 및 Java client 연동">
-  <meta name="twitter:description" content="개요Prometheus 는 오픈소스 모니터링 솔루션이다. (https://prometheus.io/) 크게 Prometheus 서버와, 메트릭 정보를 export할 export node로 구성이 되어 있다  구조가 좀 일반적인 모니터링 시스템과는 다르다는걸 느낄수가 있는데, 원래는 대부분의 솔루션이 메트릭을 수집할 때 메트릭이 발생한 서버에서 중앙 서버로">
+  <meta name="twitter:description" content="개요 Prometheus 는 오픈소스 모니터링 솔루션이다. (https://prometheus.io/) 크게 Prometheus 서버와, 메트릭 정보를 export할 export node로 구성이 되어 있다  구조가 좀 일반적인 모니터링 시스템과는 다르다는걸 느낄수가 있는데, 원래는 대부분의 솔루션이 메트릭을 수집할 때 메트릭이 발생한 서버에서 중앙 서버로">
   <meta name="twitter:image" content="http://tech.cloudz-labs.io/posts/monitoring-in-kubernetes/monitoring-prometheus-01.png">
 
   <link rel="canonical" href="https://gompangs.github.io/2018/12/14/prometheus/">
@@ -543,7 +543,6 @@
         <p>사실 간단한 연동이라고 해서 진행을 했지만 도중에 어려운 부분이 하나씩 있을테니 가이드를 보면서 차근차근 도전해보는게 좋다. 사실 Prometheus로 시작했지만, 끝 마무리는 Grafana로 맺게 되는데.. Grafana를 약식으로 소개해서 그렇지 이 하나만 가지고도 여러개의 포스팅이 나올 수 있을만큼 강력하고 간단한 오픈소스 대시보드 솔루션이다.</p>
         <p>이렇게 구성을 해두면 서비스를 하면서 문제가 생길만한 포인트를 사전에 알아본다던지, 현재 문제가 발생하는 부분이 어디에서 나는지(어떤 API가 현재 몇 TPS, Response time은 괜찮은지) 에 대한 정보를 얻을 수 있게 된다.</p>
         <p>아무래도 devOps같은걸 하다보면 실제 개발만 하고 끝나는게 아니라 운영과 모니터링을 해야 하는데 그런 부분에서 Prometheus와 Grafana는 이런 정보를 얻기에 정말 간편한 구조를 채택하고 있음이 분명하고, 잘 활용을 한다면 높은 SLA 를 유지하는데 도움이 될 것이다.</p>
-
       </div>
     </article>
     <div class="blog-post-comments">
