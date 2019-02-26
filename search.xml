@@ -3,6 +3,43 @@
   
     
     <entry>
+      <title>PasswordEncoder</title>
+      <link href="/2019/02/27/PasswordEncoder/"/>
+      <url>/2019/02/27/PasswordEncoder/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      <categories>
+          
+          <category> JAVA </category>
+          
+          <category> Spring </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> java </tag>
+            
+            <tag> spring </tag>
+            
+            <tag> PasswordEncoder </tag>
+            
+            <tag> BCryptPasswordEncoder </tag>
+            
+            <tag> SHA </tag>
+            
+            <tag> Salt </tag>
+            
+            <tag> Hash </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
       <title>Spring DispatcherServlet</title>
       <link href="/2019/02/17/dispatcherServlet/"/>
       <url>/2019/02/17/dispatcherServlet/</url>
