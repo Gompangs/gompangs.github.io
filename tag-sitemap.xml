@@ -74,49 +74,70 @@
 
     <url>
         <loc>https://gompangs.github.io/tags/java/</loc>
-        <lastmod>2019-02-26T17:42:46.490Z</lastmod>
+        <lastmod>2019-02-27T13:03:48.397Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://gompangs.github.io/tags/spring/</loc>
-        <lastmod>2019-02-26T17:42:46.490Z</lastmod>
+        <lastmod>2019-02-27T13:03:48.397Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://gompangs.github.io/tags/PasswordEncoder/</loc>
-        <lastmod>2019-02-26T17:42:46.490Z</lastmod>
+        <lastmod>2019-02-27T13:03:48.397Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://gompangs.github.io/tags/BCryptPasswordEncoder/</loc>
-        <lastmod>2019-02-26T17:42:46.490Z</lastmod>
+        <lastmod>2019-02-27T13:03:48.397Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://gompangs.github.io/tags/SHA/</loc>
-        <lastmod>2019-02-26T17:42:46.490Z</lastmod>
+        <lastmod>2019-02-27T13:03:48.397Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://gompangs.github.io/tags/Salt/</loc>
-        <lastmod>2019-02-26T17:42:46.490Z</lastmod>
+        <lastmod>2019-02-27T13:03:48.397Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://gompangs.github.io/tags/Hash/</loc>
-        <lastmod>2019-02-26T17:42:46.490Z</lastmod>
+        <lastmod>2019-02-27T13:03:48.397Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://gompangs.github.io/tags/SCryptPasswordEncoder/</loc>
+        <lastmod>2019-02-27T13:03:48.397Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://gompangs.github.io/tags/Pbkdf2PasswordEncoder/</loc>
+        <lastmod>2019-02-27T13:03:48.397Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://gompangs.github.io/tags/DelegatingPasswordEncoder/</loc>
+        <lastmod>2019-02-27T13:03:48.397Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
