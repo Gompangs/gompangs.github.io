@@ -1,13 +1,60 @@
 <!DOCTYPE html>
-<html lang="ko">
-<head><meta name="generator" content="Hexo 3.8.0">
-    <meta charset="utf-8">
-<title>Prometheus 공부 및 Java client 연동 - 곰팡이 개발연구소</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-    <meta name="description" content="개요Prometheus 는 오픈소스 모니터링 솔루션이다. (https://prometheus.io/) 크게 Prometheus 서버와, 메트릭 정보를 export할 export node로 구성이 되어 있다  구조가 좀 일반적인 모니터링 시스템과는 다르다는걸 느낄수가 있는데, 원래는 대부분의 솔루션이 메트릭을 수집할 때 메트릭이 발생한 서버에서 중앙 서버로">
+
+
+<html class="theme-next gemini use-motion" lang="ko">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    save_scroll: false,
+    copycode: {"enable":true,"show_result":true,"style":"mac"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '복사',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    }
+  };
+</script>
+
+  <meta name="description" content="개요Prometheus 는 오픈소스 모니터링 솔루션이다. (https://prometheus.io/) 크게 Prometheus 서버와, 메트릭 정보를 export할 export node로 구성이 되어 있다  구조가 좀 일반적인 모니터링 시스템과는 다르다는걸 느낄수가 있는데, 원래는 대부분의 솔루션이 메트릭을 수집할 때 메트릭이 발생한 서버에서 중앙 서버로">
 <meta name="keywords" content="java,prometheus,prometheus java client,grafana,monitoring,모니터링">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Prometheus 공부 및 Java client 연동">
@@ -31,163 +78,282 @@
 <meta name="twitter:title" content="Prometheus 공부 및 Java client 연동">
 <meta name="twitter:description" content="개요Prometheus 는 오픈소스 모니터링 솔루션이다. (https://prometheus.io/) 크게 Prometheus 서버와, 메트릭 정보를 export할 export node로 구성이 되어 있다  구조가 좀 일반적인 모니터링 시스템과는 다르다는걸 느낄수가 있는데, 원래는 대부분의 솔루션이 메트릭을 수집할 때 메트릭이 발생한 서버에서 중앙 서버로">
 <meta name="twitter:image" content="https://gompangs.github.io/images/prometheus/architecture2.png">
+  <link rel="canonical" href="https://gompangs.github.io/2018/12/14/prometheus/">
 
 
-
-
-
-<link rel="icon" href="/images/fav.svg">
-
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
-
-
-    
-    
-    
-    
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
-    
-
-    
-    
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
-
-
-    
-    
-    
-    
-
-<link rel="stylesheet" href="/css/back-to-top.css">
-
-
-    
-    
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-68696489-4"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'UA-68696489-4');
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
 </script>
 
-
-    
-    
-    
-    
-
-    
-    
-<link rel="stylesheet" href="/css/progressbar.css">
-<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
-
-    
-    
-    
-
-    
-    
-    
+  <title>Prometheus 공부 및 Java client 연동 | 곰팡이 개발연구소</title>
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-68696489-4"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-68696489-4');
+    }
+  </script>
 
 
-<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
 </head>
-<body class="is-3-column">
-    <nav class="navbar navbar-main">
-    <div class="container">
-        <div class="navbar-brand is-flex-center">
-            <a class="navbar-item navbar-logo" href="/">
-            
-                <img src="/images/logo.svg" alt="Prometheus 공부 및 Java client 연동" height="28">
-            
-            </a>
-        </div>
-        <div class="navbar-menu">
-            
-            <div class="navbar-start">
-                
-                <a class="navbar-item" href="/.">Home</a>
-                
-                <a class="navbar-item" href="/about">About</a>
-                
-                <a class="navbar-item" href="/archives">Archives</a>
-                
-                <a class="navbar-item" href="/categories">Categories</a>
-                
-                <a class="navbar-item" href="/tags">Tags</a>
-                
-            </div>
-            
-            <div class="navbar-end">
-                
-                    
-                    
-                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus" rel="external nofollow noopener noreferrer">
-                        
-                        <i class="fab fa-github"></i>
-                        
-                    </a>
-                    
-                
-                
-                
-                <a class="navbar-item search" title="Search" href="javascript:;">
-                    <i class="fas fa-search"></i>
-                </a>
-                
-            </div>
-        </div>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="ko">
+
+  <div class="container sidebar-position-left">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">곰팡이 개발연구소</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
     </div>
+        <h1 class="site-subtitle" itemprop="description">네임드 개발자가 되는 그날까지!</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>홈</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>태그<span class="badge">20</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>카테고리<span class="badge">4</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>아카이브<span class="badge">3</span></a>
+
+  </li>
+  </ul>
+
 </nav>
+</div>
+    </header>
+
     
-    <section class="section">
-        <div class="container">
-            <div class="columns">
-                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+
+  <a href="https://github.com/gompangs" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="external nofollow noopener noreferrer" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content page-post-detail">
+            
+
+  <div id="posts" class="posts-expand">
     
-    <div class="card-image">
-        <span class="image is-7by1">
-            <img class="thumbnail" src="/images/prometheus_logo.png" alt="Prometheus 공부 및 Java client 연동">
-        </span>
-    </div>
-    
-    <div class="card-content article ">
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://gompangs.github.io/2018/12/14/prometheus/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="곰팡이">
+      <meta itemprop="description" content="개발덕후 삽질 끄적끄적..">
+      <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/11327843?s=460&v=4">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="곰팡이 개발연구소">
+    </span>
+      <header class="post-header">
+
         
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-12-13T15:55:00.000Z">2018-12-14</time>
+          <h2 class="post-title" itemprop="name headline">Prometheus 공부 및 Java client 연동
+
+            
+          </h2>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">작성일</span>
+
+              
                 
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Monitoring/">Monitoring</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    40분 read (About 6067 words)
+              
+
+              <time title="Post created: 2018-12-14 00:55:00" itemprop="dateCreated datePublished" datetime="2018-12-14T00:55:00+09:00">2018-12-14</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
                 </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Updated at: 2019-02-18 02:43:25" itemprop="dateModified" datetime="2019-02-18T02:43:25+09:00">2019-02-18</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Monitoring/" itemprop="url" rel="index"><span itemprop="name">Monitoring</span></a></span>
+
                 
                 
-            </div>
-        </div>
+              
+            </span>
+          
+
+          
+            
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
         
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                Prometheus 공부 및 Java client 연동
-            
-        </h1>
-        <div class="content">
-            <h2 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h2><p>Prometheus 는 오픈소스 모니터링 솔루션이다. (<a href="https://prometheus.io/" rel="external nofollow noopener noreferrer" target="_blank">https://prometheus.io/</a>)</p>
+      
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2018/12/14/prometheus/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/12/14/prometheus/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h2><p>Prometheus 는 오픈소스 모니터링 솔루션이다. (<a href="https://prometheus.io/" rel="external nofollow noopener noreferrer" target="_blank">https://prometheus.io/</a>)</p>
 <p>크게 Prometheus 서버와, 메트릭 정보를 export할 export node로 구성이 되어 있다</p>
 <p><img src="/images/prometheus/architecture2.png" alt="architecture"></p>
 <p>구조가 좀 일반적인 모니터링 시스템과는 다르다는걸 느낄수가 있는데, 원래는 대부분의 솔루션이 메트릭을 수집할 때 메트릭이 발생한 서버에서 중앙 서버로 데이터를 전송해주는 구조로(push) 되어 있지만, 프로메테우스 같은 경우는 신기하게도 중앙서버(prometheus server)에서 메트릭을 polling 해서 가져가도록 구성이 되어 있다.</p>
@@ -207,7 +373,8 @@
 <p>내부 저장소는 Google에서 만든 <a href="https://github.com/google/leveldb" rel="external nofollow noopener noreferrer" target="_blank">Level DB</a>를 사용하는걸로 보인다 light-weight의 Key-value 저장소이며 전반적으로 뛰어난 성능을 보이기에 여러군데서 차용해서 쓰는것 같다.(프로메테우스도)</p>
 <p><img src="https://image.slidesharecdn.com/copyofprometheusstorage1-160127133731/95/prometheus-storage-7-638.jpg?cb=1453901940" alt="prometheus metric schema"></p>
 <p>프로메테우스의 메트릭은 위와 같이 수집이 되는데 </p>
-<figure class="highlight hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">메트릭명&#123;필드1=값, 필드2=값&#125; 샘플링데이터</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">메트릭명&#123;필드1=값, 필드2=값&#125; 샘플링데이터</span><br></pre></td></tr></table></figure>
+
 <p>실제로 timestamp값은 프로메테우스 서버 내부에서 저장될 때 같이 넣게 되고 export하는 부분에서는 메트릭명-샘플링데이터와 같은 형태로 보여지게 된다.</p>
 <p><img src="https://3.bp.blogspot.com/-eduU9hfXlCY/WhJT2x6oFqI/AAAAAAAAff8/sUiEeCflN-E9oY5Vn98ypNgx-fYlxv4IgCLcBGAs/s1600/Micrometer-Boot2.png" alt="spring boot micrometer metric(exported)"></p>
 <p>이게 Spring boot에 Prometheus export 라이브러리를 붙인 모습인데, 보다시피 많은수의 메트릭이 발생을 하게 되고, 이를 text/html 방식으로 특정 url(대부분 /metrics)로 export를 해두게 되면, prometheus 서버가 이를 긁어가서 데이터를 저장하는 구조이다.</p>
@@ -217,7 +384,8 @@
 <p>위와 같이 Bootstrap으로 작성된듯한 투박한 대시보드가 제공이 되고, 간단하게 보고싶은 메트릭에 대한 그래프를 볼 수 있는 정도이다. 한 대시보드에 여러개의 메트릭의 추이를 보고싶다던지, 다른 그래프 형식으로 보고싶다던지 하는 것들은 지원이 되지 않으며 이는 Grafana를 통해 시각화가 가능하니 그쪽을 보도록 하자.</p>
 <h3 id="Alert-Manager"><a href="#Alert-Manager" class="headerlink" title="Alert Manager"></a>Alert Manager</h3><p>모니터링 시스템이니, 문제가 발생하면 이를 알람으로 보내주는 역할도 있어야한다. Alertmanager는 Prometheus에서 문제가 발생했다고 생각되는 시점에 slack, hipchat 등을 통해 알람을 보내준다.</p>
 <p>알람을 거는 기준은 Rule을 작성해서 load시키는 방식으로 동작하는데</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expr: job:request_latency_seconds:mean5m&#123;job=&quot;myjob&quot;&#125; &gt; 0.5</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expr: job:request_latency_seconds:mean5m&#123;job=&quot;myjob&quot;&#125; &gt; 0.5</span><br></pre></td></tr></table></figure>
+
 <p>와 같이 expression을 작성하는 것으로 알람을 전송할 수 있다. 특정 메트릭의 값이 어느정도 선(threshold)을 넘는다거나, 낮아진다거나 하는 메트릭을 보고 판단을 할 수 있다.</p>
 <p>다만, 이 또한 Grafana를 사용하게 된다면 Grafana에서도 동일하게 알람매니저를 제공을 하고 있는데, 아무래도 Grafana쪽이 사용하기 더 쉽고 직관적이기 때문에 이걸 직접 사용할까는 싶지만, 그래도 expression을 이용해서 더 복잡한 조건을 걸어서 알람을 노티해주는 방식이 있다는건 좋다.</p>
 <p><img src="https://pracucci.com/assets/2017-04-01-kubecon-2017-alerts-24e7dcdc29996e951730bb67937e4c2a685b554ffd88f502a8b6e650cd42025f.png" alt=""></p>
@@ -225,11 +393,13 @@
 <p>다운로드는 <a href="https://prometheus.io/download/#prometheus" rel="external nofollow noopener noreferrer" target="_blank">https://prometheus.io/download/#prometheus</a> 에서 할 수 있다</p>
 <p>prometheus 서버 말고도 각종 exporter가 있다(node js, alertmanager 등).. 여기서는 prometheus server만 받아서 맞는 운영체제 버전으로 받자</p>
 <p>본인은 odroid의 armv7을 사용하고 있어서 해당 바이너리로 받게 되었고,</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/prometheus/prometheus/releases/download/v2.5.0/prometheus-2.5.0.linux-armv7.tar.gz</span><br><span class="line">tar xvfz prometheus-2.5.0.linux-armv7.tar.gz</span><br><span class="line">cd prometheus-2.5.0.linux-armv7</span><br><span class="line">./prometheus</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/prometheus/prometheus/releases/download/v2.5.0/prometheus-2.5.0.linux-armv7.tar.gz</span><br><span class="line">tar xvfz prometheus-2.5.0.linux-armv7.tar.gz</span><br><span class="line">cd prometheus-2.5.0.linux-armv7</span><br><span class="line">./prometheus</span><br></pre></td></tr></table></figure>
+
 <p>로 바로 실행을 할 수 있다. 다만 지금은 서버가 뜨긴 하지만 아무런 메트릭을 수집하지 않고있다. 이는 prometheus.yml에서 scape를 할 target을 지정하지 않았기 때문이다. 지금은 단순히 9090포트로 접근을 해보면 Prometheus의 대시보드를 볼 수 있을것이다</p>
 <p><img src="https://www.joyfulbikeshedding.com/images/2018/prometheus-42e58d9a.png" alt="prometheus 대시보드 메트릭 확인"></p>
 <p>대시보드에서 무언가를 보기 위해서는 일단 prometheus.yml 의 내용을 보도록 하자</p>
-<h3 id="prometheus-yml"><a href="#prometheus-yml" class="headerlink" title="prometheus.yml"></a>prometheus.yml</h3><figure class="highlight yaml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># my global config</span></span><br><span class="line"><span class="hljs-attr">global:</span></span><br><span class="line"><span class="hljs-attr">  scrape_interval:</span>     <span class="hljs-number">15</span><span class="hljs-string">s</span> <span class="hljs-comment"># Set the scrape interval to every 15 seconds. Default is every 1 minute.</span></span><br><span class="line"><span class="hljs-attr">  evaluation_interval:</span> <span class="hljs-number">15</span><span class="hljs-string">s</span> <span class="hljs-comment"># Evaluate rules every 15 seconds. The default is every 1 minute.</span></span><br><span class="line">  <span class="hljs-comment"># scrape_timeout is set to the global default (10s).</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Alertmanager configuration</span></span><br><span class="line"><span class="hljs-attr">alerting:</span></span><br><span class="line"><span class="hljs-attr">  alertmanagers:</span></span><br><span class="line"><span class="hljs-attr">  - static_configs:</span></span><br><span class="line"><span class="hljs-attr">    - targets:</span></span><br><span class="line">      <span class="hljs-comment"># - alertmanager:9093</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Load rules once and periodically evaluate them according to the global 'evaluation_interval'.</span></span><br><span class="line"><span class="hljs-attr">rule_files:</span></span><br><span class="line">  <span class="hljs-comment"># - "first_rules.yml"</span></span><br><span class="line">  <span class="hljs-comment"># - "second_rules.yml"</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># A scrape configuration containing exactly one endpoint to scrape:</span></span><br><span class="line"><span class="hljs-comment"># Here it's Prometheus itself.</span></span><br><span class="line"><span class="hljs-attr">scrape_configs:</span></span><br><span class="line">  <span class="hljs-comment"># The job name is added as a label `job=&lt;job_name&gt;` to any timeseries scraped from this config.</span></span><br><span class="line"><span class="hljs-attr">  - job_name:</span> <span class="hljs-string">'prometheus'</span></span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment"># metrics_path defaults to '/metrics'</span></span><br><span class="line">    <span class="hljs-comment"># scheme defaults to 'http'.</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-attr">    static_configs:</span></span><br><span class="line"><span class="hljs-attr">    - targets:</span> <span class="hljs-string">['localhost:9090']</span></span><br></pre></td></tr></table></figure>
+<h3 id="prometheus-yml"><a href="#prometheus-yml" class="headerlink" title="prometheus.yml"></a>prometheus.yml</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># my global config</span></span><br><span class="line"><span class="attr">global:</span></span><br><span class="line"><span class="attr">  scrape_interval:</span>     <span class="number">15</span><span class="string">s</span> <span class="comment"># Set the scrape interval to every 15 seconds. Default is every 1 minute.</span></span><br><span class="line"><span class="attr">  evaluation_interval:</span> <span class="number">15</span><span class="string">s</span> <span class="comment"># Evaluate rules every 15 seconds. The default is every 1 minute.</span></span><br><span class="line">  <span class="comment"># scrape_timeout is set to the global default (10s).</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Alertmanager configuration</span></span><br><span class="line"><span class="attr">alerting:</span></span><br><span class="line"><span class="attr">  alertmanagers:</span></span><br><span class="line"><span class="attr">  - static_configs:</span></span><br><span class="line"><span class="attr">    - targets:</span></span><br><span class="line">      <span class="comment"># - alertmanager:9093</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Load rules once and periodically evaluate them according to the global 'evaluation_interval'.</span></span><br><span class="line"><span class="attr">rule_files:</span></span><br><span class="line">  <span class="comment"># - "first_rules.yml"</span></span><br><span class="line">  <span class="comment"># - "second_rules.yml"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># A scrape configuration containing exactly one endpoint to scrape:</span></span><br><span class="line"><span class="comment"># Here it's Prometheus itself.</span></span><br><span class="line"><span class="attr">scrape_configs:</span></span><br><span class="line">  <span class="comment"># The job name is added as a label `job=&lt;job_name&gt;` to any timeseries scraped from this config.</span></span><br><span class="line"><span class="attr">  - job_name:</span> <span class="string">'prometheus'</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># metrics_path defaults to '/metrics'</span></span><br><span class="line">    <span class="comment"># scheme defaults to 'http'.</span></span><br><span class="line"></span><br><span class="line"><span class="attr">    static_configs:</span></span><br><span class="line"><span class="attr">    - targets:</span> <span class="string">['localhost:9090']</span></span><br></pre></td></tr></table></figure>
+
 <p>설정이 다른 모니터링 서비스들에 비해서는 매우 간단한 편이다. (모든 설정이 간편한건 아니다. default로 설정 되어있는 config가 간단해서 그렇지, 실제로 모든 config의 field를 보면 상당히 양이 많다. 자세한건 <a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/" rel="external nofollow noopener noreferrer" target="_blank">https://prometheus.io/docs/prometheus/latest/configuration/configuration/</a>) </p>
 <h4 id="config-설명"><a href="#config-설명" class="headerlink" title="config 설명"></a>config 설명</h4><ul>
 <li>global.scrape_interval : 몇 초 단위로 메트릭을 수집할 지를 결정(15초로 기본으로 되어 있는데, 이를 수정하여 1초단위로 수집을 할 지.. 10초 단위로 수집할지.. 1분 단위로 수집할지를 결정할 수 있다)</li>
@@ -246,7 +416,8 @@
 </li>
 </ul>
 <p>간단하게 static_configs의 target만 고쳐서 prometheus를 띄워보도록 하자</p>
-<figure class="highlight yaml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-attr">- targets:</span> <span class="hljs-string">['192.168.0.3:9090']</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- targets:</span> <span class="string">['192.168.0.3:9090']</span></span><br></pre></td></tr></table></figure>
+
 <p><img src="/images/prometheus/prom1.png" alt="prometheus 실행">    </p>
 <p>서버가 잘 실행이 되면 위와 같이 <strong><em>Server is ready to receive web requests.</em></strong> 라는 메세지가 나오게 된다.</p>
 <p>이제 메트릭을 수집하기 위해 sample client를 만들어봐야하는데, 간단하게 spring boot로 구성을 해서 띄워보도록 하겠다. 샘플 프로젝트는 github에 올려놨으니 보고 참고를 하면 좋을 것 같다.</p>
@@ -256,15 +427,19 @@
 <h2 id="Spring-Boot-Sample-Client-Java"><a href="#Spring-Boot-Sample-Client-Java" class="headerlink" title="Spring Boot Sample Client(Java)"></a>Spring Boot Sample Client(Java)</h2><h3 id="프로젝트-생성"><a href="#프로젝트-생성" class="headerlink" title="프로젝트 생성"></a>프로젝트 생성</h3><p>pom.xml에 아래의 dependency를 추가하게 되면 prometheus client가 추가가 되게 된다.</p>
 <p>사실 이런 방식 말고 spring boot용 prometheus client가 존재를 해서 그걸 dependency로 가져오게 되면 훨씬 간단하게 바로 사용을 할 수 있는데, 어떻게 돌아가는지를 직접 보면서 metric을 export를 해보기 위해서 client 모듈을 직접 가져와서 사용해보도록 하자.</p>
 <p>참고. Spring boot용 client는 actuator를 활용해서 구현이 되어 있다(<a href="https://www.callicoder.com/spring-boot-actuator-metrics-monitoring-dashboard-prometheus-grafana/" rel="external nofollow noopener noreferrer" target="_blank">https://www.callicoder.com/spring-boot-actuator-metrics-monitoring-dashboard-prometheus-grafana/</a>) 를 참고하면 연동방법에 대해 나와 있다.</p>
-<figure class="highlight xml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">&lt;!-- The client --&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.prometheus<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>simpleclient<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>0.6.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></span><br><span class="line"><span class="hljs-comment">&lt;!-- Hotspot JVM metrics--&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.prometheus<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>simpleclient_hotspot<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>0.6.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></span><br><span class="line"><span class="hljs-comment">&lt;!-- Exposition HTTPServer--&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.prometheus<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>simpleclient_httpserver<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>0.6.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- The client --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.prometheus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>simpleclient<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.6.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- Hotspot JVM metrics--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.prometheus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>simpleclient_hotspot<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.6.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- Exposition HTTPServer--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.prometheus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>simpleclient_httpserver<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.6.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
 <p>dependency를 추가하고, spring boot dependency를 추가하고나서 Java bean config쪽을 구성해보자</p>
-<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Configuration</span></span><br><span class="line"><span class="hljs-meta">@Slf</span>4j</span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PrometheusConfig</span> </span>&#123;</span><br><span class="line">    <span class="hljs-meta">@PostConstruct</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">init</span><span class="hljs-params">()</span></span>&#123;</span><br><span class="line">        DefaultExports.initialize(); <span class="hljs-comment">// Export JVM Metrics into http endpoint</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-meta">@Bean</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> HTTPServer <span class="hljs-title">prometheusServer</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        log.info(<span class="hljs-string">"promethues server has started"</span>);</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> HTTPServer(<span class="hljs-number">9090</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrometheusConfig</span> </span>&#123;</span><br><span class="line">    <span class="meta">@PostConstruct</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span>&#123;</span><br><span class="line">        DefaultExports.initialize(); <span class="comment">// Export JVM Metrics into http endpoint</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> HTTPServer <span class="title">prometheusServer</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        log.info(<span class="string">"promethues server has started"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> HTTPServer(<span class="number">9090</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>보면 그냥 configuration 클래스가 로딩될 때, DefaultExports로 initialize를 해주고, prometheus 서버를 띄워주는 역할만 하고 있다.</p>
 <p>이렇게 구성해서 띄워보면, 실제로 9090포트로 prometheus metric exporter가 구동이 되게 된다. 접근해보면 아래와 같은 페이지가 나오게 된다</p>
-<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"># HELP jvm_memory_bytes_used Used bytes of a given JVM memory area.</span><br><span class="line"># TYPE jvm_memory_bytes_used gauge</span><br><span class="line">jvm_memory_bytes_used&#123;area="heap",&#125; 8.0815512E7</span><br><span class="line">jvm_memory_bytes_used&#123;area="nonheap",&#125; 4.3263472E7</span><br><span class="line"># HELP jvm_memory_bytes_committed Committed (bytes) of a given JVM memory area.</span><br><span class="line"># TYPE jvm_memory_bytes_committed gauge</span><br><span class="line">jvm_memory_bytes_committed&#123;area="heap",&#125; 1.6777216E8</span><br><span class="line">jvm_memory_bytes_committed&#123;area="nonheap",&#125; 4.5481984E7</span><br><span class="line"># HELP jvm_memory_bytes_max Max (bytes) of a given JVM memory area.</span><br><span class="line"># TYPE jvm_memory_bytes_max gauge</span><br><span class="line">jvm_memory_bytes_max&#123;area="heap",&#125; 1.908932608E9</span><br><span class="line">jvm_memory_bytes_max&#123;area="nonheap",&#125; -1.0</span><br><span class="line"># HELP jvm_memory_bytes_init Initial bytes of a given JVM memory area.</span><br><span class="line"># TYPE jvm_memory_bytes_init gauge</span><br><span class="line">jvm_memory_bytes_init&#123;area="heap",&#125; 1.34217728E8</span><br><span class="line">jvm_memory_bytes_init&#123;area="nonheap",&#125; 2555904.0</span><br><span class="line"># HELP jvm_memory_pool_bytes_used Used bytes of a given JVM memory pool.</span><br><span class="line"># TYPE jvm_memory_pool_bytes_used gauge</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="Code Cache",&#125; 7142976.0</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="Metaspace",&#125; 3.1820632E7</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="Compressed Class Space",&#125; 4299864.0</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="PS Eden Space",&#125; 5.7521336E7</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="PS Survivor Space",&#125; 8909040.0</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="PS Old Gen",&#125; 1.4385136E7</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"># HELP jvm_memory_bytes_used Used bytes of a given JVM memory area.</span><br><span class="line"># TYPE jvm_memory_bytes_used gauge</span><br><span class="line">jvm_memory_bytes_used&#123;area="heap",&#125; 8.0815512E7</span><br><span class="line">jvm_memory_bytes_used&#123;area="nonheap",&#125; 4.3263472E7</span><br><span class="line"># HELP jvm_memory_bytes_committed Committed (bytes) of a given JVM memory area.</span><br><span class="line"># TYPE jvm_memory_bytes_committed gauge</span><br><span class="line">jvm_memory_bytes_committed&#123;area="heap",&#125; 1.6777216E8</span><br><span class="line">jvm_memory_bytes_committed&#123;area="nonheap",&#125; 4.5481984E7</span><br><span class="line"># HELP jvm_memory_bytes_max Max (bytes) of a given JVM memory area.</span><br><span class="line"># TYPE jvm_memory_bytes_max gauge</span><br><span class="line">jvm_memory_bytes_max&#123;area="heap",&#125; 1.908932608E9</span><br><span class="line">jvm_memory_bytes_max&#123;area="nonheap",&#125; -1.0</span><br><span class="line"># HELP jvm_memory_bytes_init Initial bytes of a given JVM memory area.</span><br><span class="line"># TYPE jvm_memory_bytes_init gauge</span><br><span class="line">jvm_memory_bytes_init&#123;area="heap",&#125; 1.34217728E8</span><br><span class="line">jvm_memory_bytes_init&#123;area="nonheap",&#125; 2555904.0</span><br><span class="line"># HELP jvm_memory_pool_bytes_used Used bytes of a given JVM memory pool.</span><br><span class="line"># TYPE jvm_memory_pool_bytes_used gauge</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="Code Cache",&#125; 7142976.0</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="Metaspace",&#125; 3.1820632E7</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="Compressed Class Space",&#125; 4299864.0</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="PS Eden Space",&#125; 5.7521336E7</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="PS Survivor Space",&#125; 8909040.0</span><br><span class="line">jvm_memory_pool_bytes_used&#123;pool="PS Old Gen",&#125; 1.4385136E7</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
 <p>값을 보게 되면 JVM에 사용되는 메트릭에 대한 정보가 export되었다는 걸 알 수 있다</p>
 <p>실제 DefaultExports.initialize(); 가 어떻게 구현되었는지를 보면 어떤 정보가 export되는지 볼 수 있는데</p>
-<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">synchronized</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initialize</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (!initialized) &#123;</span><br><span class="line">        (<span class="hljs-keyword">new</span> StandardExports()).register();</span><br><span class="line">        (<span class="hljs-keyword">new</span> MemoryPoolsExports()).register();</span><br><span class="line">        (<span class="hljs-keyword">new</span> MemoryAllocationExports()).register();</span><br><span class="line">        (<span class="hljs-keyword">new</span> BufferPoolsExports()).register();</span><br><span class="line">        (<span class="hljs-keyword">new</span> GarbageCollectorExports()).register();</span><br><span class="line">        (<span class="hljs-keyword">new</span> ThreadExports()).register();</span><br><span class="line">        (<span class="hljs-keyword">new</span> ClassLoadingExports()).register();</span><br><span class="line">        (<span class="hljs-keyword">new</span> VersionInfoExports()).register();</span><br><span class="line">        initialized = <span class="hljs-keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">initialize</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!initialized) &#123;</span><br><span class="line">        (<span class="keyword">new</span> StandardExports()).register();</span><br><span class="line">        (<span class="keyword">new</span> MemoryPoolsExports()).register();</span><br><span class="line">        (<span class="keyword">new</span> MemoryAllocationExports()).register();</span><br><span class="line">        (<span class="keyword">new</span> BufferPoolsExports()).register();</span><br><span class="line">        (<span class="keyword">new</span> GarbageCollectorExports()).register();</span><br><span class="line">        (<span class="keyword">new</span> ThreadExports()).register();</span><br><span class="line">        (<span class="keyword">new</span> ClassLoadingExports()).register();</span><br><span class="line">        (<span class="keyword">new</span> VersionInfoExports()).register();</span><br><span class="line">        initialized = <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>메모리와 쓰레드, 그리고 GC등에 대한 정보를 가져와서 등록하는 부분이 있는걸 볼 수 있다.</p>
 <p>이제 JVM에 관련된 메트릭 말고 실제 원하는 메트릭을 export를 해봐야 하는데, 그러기 위해서는 export를 할 수 있는 metric의 타입이 어떤것들이 있는지부터 알아보고 가야한다</p>
 <p>상세 설명 및 정보는 공식 홈페이지에(<a href="https://prometheus.io/docs/concepts/metric_types/" rel="external nofollow noopener noreferrer" target="_blank">https://prometheus.io/docs/concepts/metric_types/</a>) 있다.</p>
@@ -288,28 +463,36 @@
 <li>특정 기간동안의 집계나 API 콜 수 등을 보고싶을때</li>
 </ul>
 <h4 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h4><p>히스토그램과 비슷하지만, φ-quantiles을 지원한다는 점이 차이점이고 슬라이딩 시간단위의 윈도우를 계산할때 사용한다(이건 사실 무슨 소리인지 잘 모르겠다 언제 써야할지..)</p>
-<h3 id="Gauge-사용해보기"><a href="#Gauge-사용해보기" class="headerlink" title="Gauge 사용해보기"></a>Gauge 사용해보기</h3><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@RestController</span></span><br><span class="line"><span class="hljs-meta">@Slf</span>4j</span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SampleController</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">private</span> Gauge sampleGauge;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-meta">@PostConstruct</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">init</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">        sampleGauge = Gauge.build(<span class="hljs-string">"sample"</span>, <span class="hljs-string">"sample metrics"</span>).register();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-meta">@GetMapping</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">sample</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">        sampleGauge.inc();</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-string">"sample"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Gauge-사용해보기"><a href="#Gauge-사용해보기" class="headerlink" title="Gauge 사용해보기"></a>Gauge 사용해보기</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SampleController</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Gauge sampleGauge;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostConstruct</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        sampleGauge = Gauge.build(<span class="string">"sample"</span>, <span class="string">"sample metrics"</span>).register();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">sample</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        sampleGauge.inc();</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"sample"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>Gauge를 사용해봤는데, 위와 같이 사용을 하면 된다. Gauge의 build를 통해서 메트릭의 이름을 지정해주고 이를 register(); 해주면 해당 메트릭이 등록이 되게 된다.</p>
 <p>그리고 sample을 호출할때마다 sampleGauge의 값이 inc가 된다.</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># HELP sample sample metrics</span><br><span class="line"># TYPE sample gauge</span><br><span class="line">sample 0.0</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># HELP sample sample metrics</span><br><span class="line"># TYPE sample gauge</span><br><span class="line">sample 0.0</span><br></pre></td></tr></table></figure>
+
 <p>처음에 spring boot를 띄우게 되면 9090포트로 위와같은 메트릭이 export가 되게 되는데, localhost:8080으로 sample을 호출을 하게 되면 위의 sample값이 1.0 , 2.0 … 와 같이 변하게 된다.</p>
-<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Counter.build(<span class="hljs-string">"someCounter"</span>, <span class="hljs-string">"Some counter"</span>).register();</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Counter.build(<span class="string">"someCounter"</span>, <span class="string">"Some counter"</span>).register();</span><br></pre></td></tr></table></figure>
+
 <p>Counter의 경우에도 위와같이 build -&gt; register를 하게 되면 metric에 등록이 되게 된다.</p>
 <p>간단한 gauge랑 counter의 경우는 위와같이 쓰면 되지만 실제로 많이 사용하게 될 메트릭들은 대부분 histogram과 summary일텐데 이건 공부가 좀더 필요해보인다. spring boot prometheus client(micrometer)를 기본으로 export하면 대부분 summary를 많이 사용하는 걸로 보인다(histogram은 안쓰고 summary만 씀)</p>
 <h3 id="Spring-boot-exporter"><a href="#Spring-boot-exporter" class="headerlink" title="Spring boot exporter"></a>Spring boot exporter</h3><p>custom하게 metric을 export하는건 위에서 아주 살짝 맛만 봤는데, 실제로 잘 구현된 metric은 어떻게 구성되는지를 한번 알아보자. spring boot의 경우 actuator를 사용하면 별도의 설정없이 tomcat, jvm, spring에 관련된 정보를 export할 수 있다. (<a href="https://dzone.com/articles/monitoring-using-spring-boot-2-prometheus-and-graf" rel="external nofollow noopener noreferrer" target="_blank">https://dzone.com/articles/monitoring-using-spring-boot-2-prometheus-and-graf</a>)</p>
-<figure class="highlight xml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">&lt;!-- Spring boot actuator to expose metrics endpoint --&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></span><br><span class="line"><span class="hljs-comment">&lt;!-- Micormeter core dependecy  --&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.micrometer<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>micrometer-core<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></span><br><span class="line"><span class="hljs-comment">&lt;!-- Micrometer Prometheus registry  --&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.micrometer<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>micrometer-registry-prometheus<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Spring boot actuator to expose metrics endpoint --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- Micormeter core dependecy  --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.micrometer<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>micrometer-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- Micrometer Prometheus registry  --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.micrometer<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>micrometer-registry-prometheus<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
 <p>pom.xml에 위의 dependency를 import하고</p>
-<figure class="highlight yaml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="hljs-comment">#Metrics related configurations</span></span><br><span class="line"><span class="hljs-string">management.endpoint.metrics.enabled=true</span></span><br><span class="line"><span class="hljs-string">management.endpoints.web.exposure.include=*</span></span><br><span class="line"><span class="hljs-string">management.endpoint.prometheus.enabled=true</span></span><br><span class="line"><span class="hljs-string">management.metrics.export.prometheus.enabled=true</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">#Metrics related configurations</span></span><br><span class="line"><span class="string">management.endpoint.metrics.enabled=true</span></span><br><span class="line"><span class="string">management.endpoints.web.exposure.include=*</span></span><br><span class="line"><span class="string">management.endpoint.prometheus.enabled=true</span></span><br><span class="line"><span class="string">management.metrics.export.prometheus.enabled=true</span></span><br></pre></td></tr></table></figure>
+
 <p>application.properties에 위와 같은 config를 넣어주게 되면 localhost:8080/actuator/prometheus로 metric이 export되게 된다</p>
 <p>그리고 grafana에서 보여지게 될 tag를 붙여줘야 한다</p>
 <p>@Configuration 클래스를 하나 만들어서 아래의 bean을 등록해주자</p>
-<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Configuration</span></span><br><span class="line"><span class="hljs-meta">@Slf</span>4j</span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PrometheusCustomConfig</span> </span>&#123;</span><br><span class="line">    <span class="hljs-meta">@Bean</span></span><br><span class="line">    <span class="hljs-function">MeterRegistryCustomizer&lt;MeterRegistry&gt; <span class="hljs-title">metricsCommonTags</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> registry -&gt; registry.config().commonTags(<span class="hljs-string">"application"</span>, <span class="hljs-string">"PROMETHEUS-SAMPLE-SERVER"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrometheusCustomConfig</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function">MeterRegistryCustomizer&lt;MeterRegistry&gt; <span class="title">metricsCommonTags</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> registry -&gt; registry.config().commonTags(<span class="string">"application"</span>, <span class="string">"PROMETHEUS-SAMPLE-SERVER"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>이렇게 해야 grafana에서 여러개의 scrape target이 있을때 tag를 가지고 구분을 할 수 있게 된다.</p>
-<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># HELP http_server_requests_seconds  </span><br><span class="line"># TYPE http_server_requests_seconds summary</span><br><span class="line">http_server_requests_seconds_count&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator/prometheus",&#125; 1.0</span><br><span class="line">http_server_requests_seconds_sum&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator/prometheus",&#125; 0.083506614</span><br><span class="line">http_server_requests_seconds_count&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/",&#125; 5.0</span><br><span class="line">http_server_requests_seconds_sum&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/",&#125; 0.094335788</span><br><span class="line">http_server_requests_seconds_count&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/**/favicon.ico",&#125; 4.0</span><br><span class="line">http_server_requests_seconds_sum&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/**/favicon.ico",&#125; 0.042993164</span><br><span class="line">http_server_requests_seconds_count&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator",&#125; 1.0</span><br><span class="line">http_server_requests_seconds_sum&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator",&#125; 0.073100047</span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># HELP http_server_requests_seconds  </span><br><span class="line"># TYPE http_server_requests_seconds summary</span><br><span class="line">http_server_requests_seconds_count&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator/prometheus",&#125; 1.0</span><br><span class="line">http_server_requests_seconds_sum&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator/prometheus",&#125; 0.083506614</span><br><span class="line">http_server_requests_seconds_count&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/",&#125; 5.0</span><br><span class="line">http_server_requests_seconds_sum&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/",&#125; 0.094335788</span><br><span class="line">http_server_requests_seconds_count&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/**/favicon.ico",&#125; 4.0</span><br><span class="line">http_server_requests_seconds_sum&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/**/favicon.ico",&#125; 0.042993164</span><br><span class="line">http_server_requests_seconds_count&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator",&#125; 1.0</span><br><span class="line">http_server_requests_seconds_sum&#123;exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator",&#125; 0.073100047</span><br></pre></td></tr></table></figure>
+
 <p>한 예로, http server의 RPS(Request per second)의 경우에 위와 같이 export를 해주는데, 보면 uri와 httpStatus, method 등을 나타내준다. 이를 시간별로 sum, count값을 보여주므로 그래프에 표현하게 되면 시간대별 HTTP 호출 그래프를 그릴 수 있다(Grafana)</p>
 <h2 id="Prometheus-Server에-메트릭-수집하기"><a href="#Prometheus-Server에-메트릭-수집하기" class="headerlink" title="Prometheus Server에 메트릭 수집하기"></a>Prometheus Server에 메트릭 수집하기</h2><p>위 서버를 구동시켜두고(8080포트) prometheus에서 이 서버로의 metric을 수집해보도록 config파일을 바꿔보자(공유기 내부 네트워크라서 192.168.0.x 로 설정을 했지만, 실 서비스에서는 prometheus서버가 metric export를 하는 서버에 http(80)으로 접근이 가능해야 수집이 가능하다)</p>
 <p>그리고 spring boot metric exporter를 사용하게 되면 scrape path가 달라져야 하는데, 기본으로는 host 주소를 적은 뒤 “/metrics”에서 긁어오지만 spring boot의 경우는 /actuator/prometheus에서 가져오기 때문에 아래와 같이 설정을 바꿔줘야 한다</p>
-<figure class="highlight yaml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># my global config</span></span><br><span class="line"><span class="hljs-attr">global:</span></span><br><span class="line"><span class="hljs-attr">  scrape_interval:</span>     <span class="hljs-number">1</span><span class="hljs-string">s</span> <span class="hljs-comment"># Set the scrape interval to every 15 seconds. Default is every 1 minute.</span></span><br><span class="line"><span class="hljs-attr">  evaluation_interval:</span> <span class="hljs-number">1</span><span class="hljs-string">s</span> <span class="hljs-comment"># Evaluate rules every 15 seconds. The default is every 1 minute.</span></span><br><span class="line">  <span class="hljs-comment"># scrape_timeout is set to the global default (10s).</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Alertmanager configuration</span></span><br><span class="line"><span class="hljs-attr">alerting:</span></span><br><span class="line"><span class="hljs-attr">  alertmanagers:</span></span><br><span class="line"><span class="hljs-attr">  - static_configs:</span></span><br><span class="line"><span class="hljs-attr">    - targets:</span></span><br><span class="line">      <span class="hljs-comment"># - alertmanager:9093</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Load rules once and periodically evaluate them according to the global 'evaluation_interval'.</span></span><br><span class="line"><span class="hljs-attr">rule_files:</span></span><br><span class="line">  <span class="hljs-comment"># - "first_rules.yml"</span></span><br><span class="line">  <span class="hljs-comment"># - "second_rules.yml"</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># A scrape configuration containing exactly one endpoint to scrape:</span></span><br><span class="line"><span class="hljs-comment"># Here it's Prometheus itself.</span></span><br><span class="line"><span class="hljs-attr">scrape_configs:</span></span><br><span class="line">  <span class="hljs-comment"># The job name is added as a label `job=&lt;job_name&gt;` to any timeseries scraped from this config.</span></span><br><span class="line"><span class="hljs-attr">  - job_name:</span> <span class="hljs-string">'prometeus-sample-server'</span></span><br><span class="line">    <span class="hljs-comment"># metrics_path defaults to '/metrics'</span></span><br><span class="line">    <span class="hljs-comment"># scheme defaults to 'http'.</span></span><br><span class="line"><span class="hljs-attr">    metrics_path:</span> <span class="hljs-string">'/actuator/prometheus'</span></span><br><span class="line"><span class="hljs-attr">    static_configs:</span></span><br><span class="line"><span class="hljs-attr">            - targets:</span> <span class="hljs-string">['192.168.0.3:8080']</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># my global config</span></span><br><span class="line"><span class="attr">global:</span></span><br><span class="line"><span class="attr">  scrape_interval:</span>     <span class="number">1</span><span class="string">s</span> <span class="comment"># Set the scrape interval to every 15 seconds. Default is every 1 minute.</span></span><br><span class="line"><span class="attr">  evaluation_interval:</span> <span class="number">1</span><span class="string">s</span> <span class="comment"># Evaluate rules every 15 seconds. The default is every 1 minute.</span></span><br><span class="line">  <span class="comment"># scrape_timeout is set to the global default (10s).</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Alertmanager configuration</span></span><br><span class="line"><span class="attr">alerting:</span></span><br><span class="line"><span class="attr">  alertmanagers:</span></span><br><span class="line"><span class="attr">  - static_configs:</span></span><br><span class="line"><span class="attr">    - targets:</span></span><br><span class="line">      <span class="comment"># - alertmanager:9093</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Load rules once and periodically evaluate them according to the global 'evaluation_interval'.</span></span><br><span class="line"><span class="attr">rule_files:</span></span><br><span class="line">  <span class="comment"># - "first_rules.yml"</span></span><br><span class="line">  <span class="comment"># - "second_rules.yml"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># A scrape configuration containing exactly one endpoint to scrape:</span></span><br><span class="line"><span class="comment"># Here it's Prometheus itself.</span></span><br><span class="line"><span class="attr">scrape_configs:</span></span><br><span class="line">  <span class="comment"># The job name is added as a label `job=&lt;job_name&gt;` to any timeseries scraped from this config.</span></span><br><span class="line"><span class="attr">  - job_name:</span> <span class="string">'prometeus-sample-server'</span></span><br><span class="line">    <span class="comment"># metrics_path defaults to '/metrics'</span></span><br><span class="line">    <span class="comment"># scheme defaults to 'http'.</span></span><br><span class="line"><span class="attr">    metrics_path:</span> <span class="string">'/actuator/prometheus'</span></span><br><span class="line"><span class="attr">    static_configs:</span></span><br><span class="line"><span class="attr">            - targets:</span> <span class="string">['192.168.0.3:8080']</span></span><br></pre></td></tr></table></figure>
+
 <p>보면 scrape_configs에 metrics_path가 설정되었는데, 기본으로는 metrics지만 이를 actuator/prometheus로 변경해주는 부분이다. 이렇게 설정하고 잘 실행이 되면 prometheus dashboard를 가서 확인해보자</p>
 <p><img src="/images/prometheus/prom2.png" alt="prometheus 대시보드 - 메트릭 조회">    </p>
 <p>아무거나(http_server_requests_second를 골랐다) 선택해서 execute를 한 뒤 그래프를 확인해보면 위와같이 잘 나오는걸 알 수 있다.</p>
@@ -327,968 +510,389 @@
 <p>이렇게 구성을 해두면 서비스를 하면서 문제가 생길만한 포인트를 사전에 알아본다던지, 현재 문제가 발생하는 부분이 어디에서 나는지(어떤 API가 현재 몇 TPS, Response time은 괜찮은지) 에 대한 정보를 얻을 수 있게 된다.</p>
 <p>아무래도 devOps같은걸 하다보면 실제 개발만 하고 끝나는게 아니라 운영과 모니터링을 해야 하는데 그런 부분에서 Prometheus와 Grafana는 이런 정보를 얻기에 정말 간편한 구조를 채택하고 있음이 분명하고, 잘 활용을 한다면 높은 SLA 를 유지하는데 도움이 될 것이다.</p>
 
-        </div>
-        
-        <div class="level is-size-7 is-uppercase">
-            <div class="level-start">
-                <div class="level-item">
-                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/grafana/">grafana</a>, <a class="has-link-grey -link" href="/tags/java/">java</a>, <a class="has-link-grey -link" href="/tags/monitoring/">monitoring</a>, <a class="has-link-grey -link" href="/tags/prometheus/">prometheus</a>, <a class="has-link-grey -link" href="/tags/prometheus-java-client/">prometheus java client</a>, <a class="has-link-grey -link" href="/tags/모니터링/">모니터링</a>
-                </div>
-            </div>
-        </div>
-        
-        
-        
     </div>
-</div>
 
+    
+    
+    
 
+    <footer class="post-footer">
+          
+        
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/prometheus/" rel="tag"># prometheus</a>
+          
+            <a href="/tags/prometheus-java-client/" rel="tag"># prometheus java client</a>
+          
+            <a href="/tags/grafana/" rel="tag"># grafana</a>
+          
+            <a href="/tags/monitoring/" rel="tag"># monitoring</a>
+          
+            <a href="/tags/모니터링/" rel="tag"># 모니터링</a>
+          
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+          </div>
 
-<div class="card">
-    <div class="card-content">
-        <h3 class="menu-label has-text-centered">Like this article? Support the author with</h3>
-        <div class="buttons is-centered">
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+              <a href="/2019/02/17/dispatcherServlet/" rel="prev" title="Spring DispatcherServlet">
+                Spring DispatcherServlet <i class="fa fa-chevron-right"></i>
+              </a>
             
+          </div>
         </div>
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    
+  <div class="comments" id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
     </div>
-</div>
+  </div>
+  
+  
 
-
-
-<div class="card card-transparent">
-    <div class="level post-navigation is-flex-wrap is-mobile">
-        
-        <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/02/17/dispatcherServlet/">
-                <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">Spring DispatcherServlet</span>
-            </a>
         </div>
-        
-        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
     </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            목차
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            흝어보기
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" src="https://avatars1.githubusercontent.com/u/11327843?s=460&v=4" alt="곰팡이">
+  <p class="site-author-name" itemprop="name">곰팡이</p>
+  <div class="site-description motion-element" itemprop="description">개발덕후 삽질 끄적끄적..</div>
 </div>
-
-
-
-<div class="card">
-    <div class="card-content">
-        <h3 class="title is-5 has-text-weight-normal">댓글</h3>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
         
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">포스트</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">카테고리</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">태그</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://github.com/gompangs" title="GitHub &rarr; https://github.com/gompangs" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="mailto:stacks5978@gmail.com" title="E-Mail &rarr; mailto:stacks5978@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+    
+  </div>
+
+
+  <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+    <div class="links-of-blogroll-title">
+      <i class="fa  fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.linkedin.com/in/%EC%A7%84%EA%B7%A0-%EC%A0%95-bb12a610b/" title="https://www.linkedin.com/in/%EC%A7%84%EA%B7%A0-%EC%A0%95-bb12a610b/" rel="external nofollow noopener noreferrer" target="_blank">LinkedIn</a>
+        </li>
+      
+    </ul>
+  </div>
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#개요"><span class="nav-number">1.</span> <span class="nav-text">개요</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#장점"><span class="nav-number">1.1.</span> <span class="nav-text">장점</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#단점"><span class="nav-number">1.2.</span> <span class="nav-text">단점</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#정리"><span class="nav-number">1.3.</span> <span class="nav-text">정리</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#서버-내부-모듈"><span class="nav-number">2.</span> <span class="nav-text">서버 내부 모듈</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Retrival"><span class="nav-number">2.1.</span> <span class="nav-text">Retrival</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TSDB-Time-series-Database"><span class="nav-number">2.2.</span> <span class="nav-text">TSDB(Time-series Database)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-Server"><span class="nav-number">2.3.</span> <span class="nav-text">HTTP Server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Web-UI"><span class="nav-number">2.4.</span> <span class="nav-text">Web UI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Alert-Manager"><span class="nav-number">2.5.</span> <span class="nav-text">Alert Manager</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Prometheus-Server-설치"><span class="nav-number">3.</span> <span class="nav-text">Prometheus Server 설치</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Installation"><span class="nav-number">3.1.</span> <span class="nav-text">Installation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#prometheus-yml"><span class="nav-number">3.2.</span> <span class="nav-text">prometheus.yml</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#config-설명"><span class="nav-number">3.2.1.</span> <span class="nav-text">config 설명</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Boot-Sample-Client-Java"><span class="nav-number">4.</span> <span class="nav-text">Spring Boot Sample Client(Java)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#프로젝트-생성"><span class="nav-number">4.1.</span> <span class="nav-text">프로젝트 생성</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Counter"><span class="nav-number">4.1.1.</span> <span class="nav-text">Counter</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Gauge"><span class="nav-number">4.1.2.</span> <span class="nav-text">Gauge</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Histogram"><span class="nav-number">4.1.3.</span> <span class="nav-text">Histogram</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Summary"><span class="nav-number">4.1.4.</span> <span class="nav-text">Summary</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gauge-사용해보기"><span class="nav-number">4.2.</span> <span class="nav-text">Gauge 사용해보기</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-boot-exporter"><span class="nav-number">4.3.</span> <span class="nav-text">Spring boot exporter</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Prometheus-Server에-메트릭-수집하기"><span class="nav-number">5.</span> <span class="nav-text">Prometheus Server에 메트릭 수집하기</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Grafana에서-그래프-연동하기"><span class="nav-number">6.</span> <span class="nav-text">Grafana에서 그래프 연동하기</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">곰팡이</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="external nofollow noopener noreferrer" target="_blank">Hexo</a> v3.9.0</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+
+    
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.3.0"></script>
+  <script src="/js/motion.js?v=7.3.0"></script>
+
+
+  <script src="/js/affix.js?v=7.3.0"></script>
+  <script src="/js/schemes/pisces.js?v=7.3.0"></script>
+
+
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
+    
 <script>
-    var disqus_config = function () {
-        this.page.url = 'https://gompangs.github.io/2018/12/14/prometheus/';
-        this.page.identifier = '2018/12/14/prometheus/';
-    };
-    (function() {
-        var d = document, s = d.createElement('script');  
-        s.src = '//' + 'https-gompangs-github-io' + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-gompangs-github-io.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
 </script>
-
-<div id="disqus_thread">
-    
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-    </div>
-</div>
-</div>
-                
-
-
-
-
-<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
-    
-        
-<div class="card widget">
-    <div class="card-content">
-        <nav class="level">
-            <div class="level-item has-text-centered">
-                <div>
-                    
-                        <figure class="image container is-128x128 has-mb-6">
-                            <img class="is-rounded" src="/images/avatar.jpeg" alt="Gompang">
-                        </figure>
-                    
-                    
-                    <p class="is-size-4 is-block">
-                        Gompang
-                    </p>
-                    
-                    
-                    <p class="is-size-6 is-block">
-                        Java REST API Developer
-                    </p>
-                    
-                    
-                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
-                        <i class="fas fa-map-marker-alt has-mr-7"></i>
-                        <span>Seoul, ROK(Republic of Korea)</span>
-                    </p>
-                    
-                </div>
-            </div>
-        </nav>
-        <nav class="level is-mobile">
-            <div class="level-item has-text-centered is-marginless">
-                <div>
-                    <p class="heading">
-                        포스트
-                    </p>
-                    <p class="title has-text-weight-normal">
-                        3
-                    </p>
-                </div>
-            </div>
-            <div class="level-item has-text-centered is-marginless">
-                <div>
-                    <p class="heading">
-                        카테고리
-                    </p>
-                    <p class="title has-text-weight-normal">
-                        4
-                    </p>
-                </div>
-            </div>
-            <div class="level-item has-text-centered is-marginless">
-                <div>
-                    <p class="heading">
-                        태그
-                    </p>
-                    <p class="title has-text-weight-normal">
-                        20
-                    </p>
-                </div>
-            </div>
-        </nav>
-        <div class="level">
-            <a class="level-item button is-link is-rounded" href="http://github.com/Gompangs" rel="external nofollow noopener noreferrer" target="_blank">
-                팔로우</a>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            
-            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/Gompangs" rel="external nofollow noopener noreferrer">
-                
-                <i class="fab fa-github"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" title="RSS" href="/">
-                
-                <i class="fas fa-rss"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" title="Linkedin" href="https://www.linkedin.com/in/%EC%A7%84%EA%B7%A0-%EC%A0%95-bb12a610b/" rel="external nofollow noopener noreferrer">
-                
-                <i class="fab fa-linkedin-in"></i>
-                
-            </a>
-            
-        </div>
-        
-    </div>
-</div>
-    
-        
-    
-        
-
-<div class="card widget">
-    <div class="card-content">
-        <div class="menu">
-        <h3 class="menu-label">
-            링크
-        </h3>
-        <ul class="menu-list">
-        
-            <li>
-                <a class="level is-mobile" href="https://www.linkedin.com/in/%EC%A7%84%EA%B7%A0-%EC%A0%95-bb12a610b/" target="_blank" rel="external nofollow noopener noreferrer">
-                    <span class="level-left">
-                        <span class="level-item">LinkedIn</span>
-                    </span>
-                    <span class="level-right">
-                        <span class="level-item tag">www.linkedin.com</span>
-                    </span>
-                </a>
-            </li>
-        
-            <li>
-                <a class="level is-mobile" href="https://gompangs.tistory.com/" target="_blank" rel="external nofollow noopener noreferrer">
-                    <span class="level-left">
-                        <span class="level-item">Tistory</span>
-                    </span>
-                    <span class="level-right">
-                        <span class="level-item tag">gompangs.tistory.com</span>
-                    </span>
-                </a>
-            </li>
-        
-        </ul>
-        </div>
-    </div>
-</div>
-
-
-    
-        
-<div class="card widget">
-    <div class="card-content">
-        <div class="menu">
-            <h3 class="menu-label">
-                카테고리
-            </h3>
-            <ul class="menu-list">
-            <li>
-        <a class="level is-marginless" href="/categories/JAVA/">
-            <span class="level-start">
-                <span class="level-item">JAVA</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">2</span>
-            </span>
-        </a><ul><li>
-        <a class="level is-marginless" href="/categories/JAVA/Security/">
-            <span class="level-start">
-                <span class="level-item">Security</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
-            </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/JAVA/Spring/">
-            <span class="level-start">
-                <span class="level-item">Spring</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
-            </span>
-        </a></li></ul></li><li>
-        <a class="level is-marginless" href="/categories/Monitoring/">
-            <span class="level-start">
-                <span class="level-item">Monitoring</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
-            </span>
-        </a></li>
-            </ul>
-        </div>
-    </div>
-</div>
-    
-    
-        <div class="column-right-shadow is-hidden-widescreen ">
-        
-            
-<div class="card widget">
-    <div class="card-content">
-        <h3 class="menu-label">
-            최근 글
-        </h3>
-        
-        <article class="media">
-            
-            <a href="/2019/02/27/PasswordEncoder/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/passwords.jpg" alt="PasswordEncoder">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-02-26T17:41:34.000Z">2019-02-27</time></div>
-                    <a href="/2019/02/27/PasswordEncoder/" class="has-link-black-ter is-size-6">PasswordEncoder</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JAVA/">JAVA</a> / <a class="has-link-grey -link" href="/categories/JAVA/Security/">Security</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/02/17/dispatcherServlet/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/spring-featured-image.png" alt="Spring DispatcherServlet">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-02-17T14:30:11.000Z">2019-02-17</time></div>
-                    <a href="/2019/02/17/dispatcherServlet/" class="has-link-black-ter is-size-6">Spring DispatcherServlet</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JAVA/">JAVA</a> / <a class="has-link-grey -link" href="/categories/JAVA/Spring/">Spring</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2018/12/14/prometheus/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/prometheus_logo.png" alt="Prometheus 공부 및 Java client 연동">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-13T15:55:00.000Z">2018-12-14</time></div>
-                    <a href="/2018/12/14/prometheus/" class="has-link-black-ter is-size-6">Prometheus 공부 및 Java client 연동</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Monitoring/">Monitoring</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-    </div>
-</div>
-
-        
-            <div class="card widget">
-    <div class="card-content">
-        <div class="menu">
-        <h3 class="menu-label">
-            아카이브
-        </h3>
-        <ul class="menu-list">
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2019/02/">
-                <span class="level-start">
-                    <span class="level-item">2월 2019</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">2</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2018/12/">
-                <span class="level-start">
-                    <span class="level-item">12월 2018</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        </ul>
-        </div>
-    </div>
-</div>
-        
-            <div class="card widget">
-    <div class="card-content">
-        <div class="menu">
-            <h3 class="menu-label">
-                태그
-            </h3>
-            <div class="field is-grouped is-grouped-multiline">
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/BCryptPasswordEncoder/">
-                        <span class="tag">BCryptPasswordEncoder</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/Controller/">
-                        <span class="tag">Controller</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/DelegatingPasswordEncoder/">
-                        <span class="tag">DelegatingPasswordEncoder</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/DispatcherServlet/">
-                        <span class="tag">DispatcherServlet</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/Hash/">
-                        <span class="tag">Hash</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/Model/">
-                        <span class="tag">Model</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/PasswordEncoder/">
-                        <span class="tag">PasswordEncoder</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/Pbkdf2PasswordEncoder/">
-                        <span class="tag">Pbkdf2PasswordEncoder</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/SCryptPasswordEncoder/">
-                        <span class="tag">SCryptPasswordEncoder</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/SHA/">
-                        <span class="tag">SHA</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/Salt/">
-                        <span class="tag">Salt</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/View/">
-                        <span class="tag">View</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/grafana/">
-                        <span class="tag">grafana</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/java/">
-                        <span class="tag">java</span>
-                        <span class="tag is-grey">3</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/monitoring/">
-                        <span class="tag">monitoring</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/mvc/">
-                        <span class="tag">mvc</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/prometheus/">
-                        <span class="tag">prometheus</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/prometheus-java-client/">
-                        <span class="tag">prometheus java client</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/spring/">
-                        <span class="tag">spring</span>
-                        <span class="tag is-grey">2</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/모니터링/">
-                        <span class="tag">모니터링</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-            </div>
-        </div>
-    </div>
-</div>
-        
-        </div>
-    
-</div>
-
-                
-
-
-
-
-<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
-    
-        
-<div class="card widget">
-    <div class="card-content">
-        <h3 class="menu-label">
-            최근 글
-        </h3>
-        
-        <article class="media">
-            
-            <a href="/2019/02/27/PasswordEncoder/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/passwords.jpg" alt="PasswordEncoder">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-02-26T17:41:34.000Z">2019-02-27</time></div>
-                    <a href="/2019/02/27/PasswordEncoder/" class="has-link-black-ter is-size-6">PasswordEncoder</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JAVA/">JAVA</a> / <a class="has-link-grey -link" href="/categories/JAVA/Security/">Security</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/02/17/dispatcherServlet/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/spring-featured-image.png" alt="Spring DispatcherServlet">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-02-17T14:30:11.000Z">2019-02-17</time></div>
-                    <a href="/2019/02/17/dispatcherServlet/" class="has-link-black-ter is-size-6">Spring DispatcherServlet</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JAVA/">JAVA</a> / <a class="has-link-grey -link" href="/categories/JAVA/Spring/">Spring</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2018/12/14/prometheus/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/prometheus_logo.png" alt="Prometheus 공부 및 Java client 연동">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-13T15:55:00.000Z">2018-12-14</time></div>
-                    <a href="/2018/12/14/prometheus/" class="has-link-black-ter is-size-6">Prometheus 공부 및 Java client 연동</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Monitoring/">Monitoring</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-    </div>
-</div>
-
-    
-        <div class="card widget">
-    <div class="card-content">
-        <div class="menu">
-        <h3 class="menu-label">
-            아카이브
-        </h3>
-        <ul class="menu-list">
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2019/02/">
-                <span class="level-start">
-                    <span class="level-item">2월 2019</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">2</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2018/12/">
-                <span class="level-start">
-                    <span class="level-item">12월 2018</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        </ul>
-        </div>
-    </div>
-</div>
-    
-        <div class="card widget">
-    <div class="card-content">
-        <div class="menu">
-            <h3 class="menu-label">
-                태그
-            </h3>
-            <div class="field is-grouped is-grouped-multiline">
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/BCryptPasswordEncoder/">
-                        <span class="tag">BCryptPasswordEncoder</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/Controller/">
-                        <span class="tag">Controller</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/DelegatingPasswordEncoder/">
-                        <span class="tag">DelegatingPasswordEncoder</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/DispatcherServlet/">
-                        <span class="tag">DispatcherServlet</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/Hash/">
-                        <span class="tag">Hash</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/Model/">
-                        <span class="tag">Model</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/PasswordEncoder/">
-                        <span class="tag">PasswordEncoder</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/Pbkdf2PasswordEncoder/">
-                        <span class="tag">Pbkdf2PasswordEncoder</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/SCryptPasswordEncoder/">
-                        <span class="tag">SCryptPasswordEncoder</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/SHA/">
-                        <span class="tag">SHA</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/Salt/">
-                        <span class="tag">Salt</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/View/">
-                        <span class="tag">View</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/grafana/">
-                        <span class="tag">grafana</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/java/">
-                        <span class="tag">java</span>
-                        <span class="tag is-grey">3</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/monitoring/">
-                        <span class="tag">monitoring</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/mvc/">
-                        <span class="tag">mvc</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/prometheus/">
-                        <span class="tag">prometheus</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/prometheus-java-client/">
-                        <span class="tag">prometheus java client</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/spring/">
-                        <span class="tag">spring</span>
-                        <span class="tag is-grey">2</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/모니터링/">
-                        <span class="tag">모니터링</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-            </div>
-        </div>
-    </div>
-</div>
-    
-    
-</div>
-
-            </div>
-        </div>
-    </section>
-    <footer class="footer">
-    <div class="container">
-        <div class="level">
-            <div class="level-start has-text-centered-mobile">
-                <a class="footer-logo is-block has-mb-6" href="/">
-                
-                    <img src="/images/logo.svg" alt="Prometheus 공부 및 Java client 연동" height="28">
-                
-                </a>
-                <p class="is-size-7">
-                &copy; 2019 Gompangs(stacks5978@gmail.com)&nbsp;
-                Powered by <a href="http://hexo.io/" target="_blank" rel="external nofollow noopener noreferrer">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="external nofollow noopener noreferrer">Icarus</a>
-                
-                </p>
-            </div>
-            <div class="level-end">
-            
-                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
-                
-                
-                <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/" rel="external nofollow noopener noreferrer">
-                        
-                        <i class="fab fa-creative-commons"></i>
-                        
-                    </a>
-                </p>
-                
-                <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/" rel="external nofollow noopener noreferrer">
-                        
-                        <i class="fab fa-creative-commons-by"></i>
-                        
-                    </a>
-                </p>
-                
-                <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus" rel="external nofollow noopener noreferrer">
-                        
-                        <i class="fab fa-github"></i>
-                        
-                    </a>
-                </p>
-                
-                </div>
-            
-            </div>
-        </div>
-    </div>
-</footer>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
-<script>moment.locale("ko");</script>
-
-
-    
-    
-    
-    
-    
-    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
-    <script src="/js/gallery.js" defer></script>
-    
-
-    
-    
-
-<div id="outdated">
-    <h6>Your browser is out-of-date!</h6>
-    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" rel="external nofollow noopener noreferrer" target="_blank">Update
-            my browser now </a></p>
-    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        outdatedBrowser({
-            bgColor: '#f25648',
-            color: '#ffffff',
-            lowerThan: 'flex'
+  var disqus_config = function() {
+    this.page.url = "https://gompangs.github.io/2018/12/14/prometheus/";
+    this.page.identifier = "2018/12/14/prometheus/";
+    this.page.title = 'Prometheus 공부 및 Java client 연동';};
+  function loadComments() {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://https-gompangs-github-io.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  }
+    $(function() {
+      var offsetTop = $('#comments').offset().top - $(window).height();
+      if (offsetTop <= 0) {
+        // load directly when there's no a scrollbar
+        window.addEventListener('load', loadComments, false);
+      } else {
+        $(window).on('scroll.disqus_scroll', function() {
+          // offsetTop may changes because of manually resizing browser window or lazy loading images.
+          var offsetTop = $('#comments').offset().top - $(window).height();
+          var scrollTop = $(window).scrollTop();
+
+          // pre-load comments a bit? (margin or anything else)
+          if (offsetTop - scrollTop < 60) {
+            $(window).off('.disqus_scroll');
+            loadComments();
+          }
         });
+      }
     });
+  
 </script>
 
-
-    
-    
-<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    MathJax.Hub.Config({
-        'HTML-CSS': {
-            matchFontHeight: false
-        },
-        SVG: {
-            matchFontHeight: false
-        },
-        CommonHTML: {
-            matchFontHeight: false
-        },
-        tex2jax: {
-            inlineMath: [
-                ['$','$'],
-                ['\\(','\\)']
-            ]
-        }
-    });
-});
-</script>
-
-    
-    
-
-<a id="back-to-top" title="Back to Top" href="javascript:;">
-    <i class="fas fa-chevron-up"></i>
-</a>
-<script src="/js/back-to-top.js" defer></script>
-
-
-    
-    
-
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
-    <script src="/js/clipboard.js" defer></script>
-    
-
-    
-    
-    
-
-
-<script src="/js/main.js" defer></script>
-
-    
-    <div class="searchbox ins-search">
-    <div class="searchbox-container ins-search-container">
-        <div class="searchbox-input-wrapper">
-            <input type="text" class="searchbox-input ins-search-input" placeholder="Type something...">
-            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="searchbox-result-wrapper ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-    (function (window) {
-        var INSIGHT_CONFIG = {
-            TRANSLATION: {
-                POSTS: '포스트',
-                PAGES: 'Pages',
-                CATEGORIES: '카테고리',
-                TAGS: '태그',
-                UNTITLED: '(Untitled)',
-            },
-            CONTENT_URL: '/content.json',
-        };
-        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-    })(window);
-</script>
-<script src="/js/insight.js" defer></script>
-<link rel="stylesheet" href="/css/search.css">
-<link rel="stylesheet" href="/css/insight.css">
-    
 </body>
 </html>
